@@ -1,0 +1,6 @@
+# swagger
+GET http://marvaks.eastus2.cloudapp.azure.com/
+GET http://marvaks.eastus2.cloudapp.azure.com/usersapi
+
+# get users
+GET http://marvaks.eastus2.cloudapp.azure.com/usersapi/api/users
