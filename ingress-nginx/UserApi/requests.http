@@ -1,6 +1,12 @@
-# swagger
-GET http://marvaks.eastus2.cloudapp.azure.com/
-GET http://marvaks.eastus2.cloudapp.azure.com/usersapi
+# root path
+GET http://marvaks.eastus2.cloudapp.azure.com/userapi
 
-# get users
-GET http://marvaks.eastus2.cloudapp.azure.com/usersapi/api/users
+###
+
+# swagger page
+GET http://marvaks.eastus2.cloudapp.azure.com/userapi/swagger
+
+###
+
+# Users
+GET http://marvaks.eastus2.cloudapp.azure.com/userapi/api/users
