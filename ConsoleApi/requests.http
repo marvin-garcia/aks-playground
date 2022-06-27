@@ -1,0 +1,16 @@
+# swagger page
+GET http://marvaks.eastus2.cloudapp.azure.com/consoleapi/docs
+
+###
+
+# Consoles
+GET http://marvaks.eastus2.cloudapp.azure.com/consoleapi/api/consoles/3
+
+###
+
+# Consoles
+GET http://marvaks.eastus2.cloudapp.azure.com/consoleapi/api/consolesbyid?id=2
+
+###
+
+GET http://localhost:8000/api/multiply/3.3/5.7
