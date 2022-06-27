@@ -1,0 +1,7 @@
+# swagger page
+GET http://marvaks.eastus2.cloudapp.azure.com/carapi/swagger
+
+###
+
+# Cars
+GET http://marvaks.eastus2.cloudapp.azure.com/carapi/api/cars/1
