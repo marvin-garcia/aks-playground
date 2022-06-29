@@ -1,8 +1,8 @@
 param peeringName string
 param virtualNetowrk1Id string
-param virtualNetwork1AddressPrefix string
+param virtualNetwork1AddressPrefix array
 param virtualnetwork2Id string
-param virtualNetwork2AddressPrefix string
+param virtualNetwork2AddressPrefix array
 
 resource vnet1Peering 'Microsoft.Network/virtualNetworks/virtualNetworkPeerings@2021-08-01' = {
   name: peeringName
@@ -13,9 +13,7 @@ resource vnet1Peering 'Microsoft.Network/virtualNetworks/virtualNetworkPeerings@
     doNotVerifyRemoteGateways: true
     useRemoteGateways: false
     remoteAddressSpace: {
-      addressPrefixes: [
-        virtualNetwork1AddressPrefix
-      ]
+      addressPrefixes: virtualNetwork1AddressPrefix
     }
     remoteVirtualNetwork: {
       id: virtualNetowrk1Id
@@ -32,9 +30,7 @@ resource vnet2Peering 'Microsoft.Network/virtualNetworks/virtualNetworkPeerings@
     doNotVerifyRemoteGateways: true
     useRemoteGateways: false
     remoteAddressSpace: {
-      addressPrefixes: [
-        virtualNetwork2AddressPrefix
-      ]
+      addressPrefixes: virtualNetwork2AddressPrefix
     }
     remoteVirtualNetwork: {
       id: virtualnetwork2Id
