@@ -47,6 +47,9 @@ param appGwHttpListenerName string = 'ingressListener'
 param appGwRequestRoutingRuleName string = 'basic'
 param unique string = substring(uniqueString(resourceGroup().id), 0, 4)
 
+var userIdentityName = 'aks-identity-${unique}'
+var roleAssignmentId = resourceId('Microsoft.Authorization/roleDefinitions', '4d97b98b-1d4f-4787-a291-c67834d212e7') // contributor role Id is 8e3af657-a8ff-443c-a75c-2fe8c4bcb635
+var roleAssignmentName = guid(identity.id, roleAssignmentId, resourceGroup().id)
 var clusterName = '${clusterNamePrefix}-${unique}'
 var aksVirtualNetworkName = '${aksVirtualNetworkNamePrefix}-${unique}'
 var appGwName = '${appGwNamePrefix}-${unique}'
@@ -59,6 +62,12 @@ var frontendPortName = 'port_${frontendPortNumber}'
 var appGwId = resourceId('Microsoft.Network/applicationGateways', appGwName)
 var requestRuleType = 'Basic'
 var vnetPeeringName = 'vnet-peering'
+
+// User assigned identity
+resource identity 'Microsoft.ManagedIdentity/userAssignedIdentities@2018-11-30' = {
+  name: userIdentityName
+  location: location
+}
 
 // Log Analytics workspace
 resource workspace 'Microsoft.OperationalInsights/workspaces@2021-12-01-preview' = {
@@ -80,7 +89,7 @@ resource workspace 'Microsoft.OperationalInsights/workspaces@2021-12-01-preview'
   }
 }
 
-// Virtual network
+// AKS Virtual network
 resource aksVnet 'Microsoft.Network/virtualNetworks@2021-08-01' = {
   name: aksVirtualNetworkName
   location: location
@@ -99,6 +108,17 @@ resource aksVnet 'Microsoft.Network/virtualNetworks@2021-08-01' = {
   }
 }
 
+// Contributor role assignment to user identity over ASK vnet
+resource roleAssignment 'Microsoft.Authorization/roleAssignments@2018-09-01-preview' = {
+  name: roleAssignmentName
+  scope: aksVnet
+  properties: {
+    roleDefinitionId: roleAssignmentId
+    principalId: identity.properties.principalId
+    principalType: 'ServicePrincipal'
+  }
+}
+
 // AKS cluster
 resource managedCluster 'Microsoft.ContainerService/managedClusters@2022-05-02-preview' = {
   name: clusterName
@@ -108,7 +128,10 @@ resource managedCluster 'Microsoft.ContainerService/managedClusters@2022-05-02-p
     tier: clusterTier
   }
   identity: {
-    type: 'SystemAssigned'
+    type: 'UserAssigned'
+    userAssignedIdentities: {
+      '${identity.id}': {}
+    }
   }
   properties: {
     kubernetesVersion: kubernetesVersion
@@ -229,7 +252,7 @@ resource managedCluster 'Microsoft.ContainerService/managedClusters@2022-05-02-p
   }
 }
 
-// Virtual network
+// App GW Virtual network
 resource appGwVnet 'Microsoft.Network/virtualNetworks@2021-08-01' = {
   name: appGwVirtualNetworkName
   location: location
@@ -248,8 +271,8 @@ resource appGwVnet 'Microsoft.Network/virtualNetworks@2021-08-01' = {
   }
 }
 
-// Public IP Address
-resource publicIp 'Microsoft.Network/publicIPAddresses@2021-08-01' = {
+// App GW Public IP Address
+resource appGwPublicIp 'Microsoft.Network/publicIPAddresses@2021-08-01' = {
   name: appGwPublicIpAddressName
   location: location
   sku: {
@@ -303,7 +326,7 @@ resource appGateway 'Microsoft.Network/applicationGateways@2021-08-01' = {
         name: appGwFrontendIpConfigurationName
         properties: {
           publicIPAddress: {
-            id: publicIp.id
+            id: appGwPublicIp.id
           }
         }
       }
@@ -367,7 +390,7 @@ resource appGateway 'Microsoft.Network/applicationGateways@2021-08-01' = {
   zones: zones
 }
 
-
+// AKS vnet peering
 resource aksVnetPeering 'Microsoft.Network/virtualNetworks/virtualNetworkPeerings@2021-08-01' = {
   name: vnetPeeringName
   parent: aksVnet
@@ -386,6 +409,7 @@ resource aksVnetPeering 'Microsoft.Network/virtualNetworks/virtualNetworkPeering
   }
 }
 
+// App GW vnet peering
 resource appgwVnetPeering 'Microsoft.Network/virtualNetworks/virtualNetworkPeerings@2021-08-01' = {
   name: vnetPeeringName
   parent: appGwVnet
