@@ -45,6 +45,7 @@ param appGwFrontendIpConfigurationName string = 'appGwPublicFrontendIp'
 param appGwGatewayIpConfigurationName string = 'appGatewayIpConfig'
 param appGwHttpListenerName string = 'ingressListener'
 param appGwRequestRoutingRuleName string = 'basic'
+param appGwProbeName string = 'ingressProbe'
 param unique string = substring(uniqueString(resourceGroup().id), 0, 4)
 
 var userIdentityName = 'aks-identity-${unique}'
@@ -317,6 +318,9 @@ resource appGateway 'Microsoft.Network/applicationGateways@2021-08-01' = {
           protocol: 'Http'
           cookieBasedAffinity: 'Disabled'
           requestTimeout: 20
+          probe: {
+            id: '${resourceId('Microsoft.Network/applicationGateways', appGwName)}/probes/${appGwProbeName}'
+          }
         }
       }
     ]
@@ -378,6 +382,26 @@ resource appGateway 'Microsoft.Network/applicationGateways@2021-08-01' = {
           }
           httpListener: {
             id: '${appGwId}/httpListeners/${appGwHttpListenerName}'
+          }
+        }
+      }
+    ]
+    probes: [
+      {
+        name: appGwProbeName
+        properties: {
+          protocol: 'Http'
+          host: 'localhost'
+          path: '/carapi/cars'
+          interval: 30
+          timeout: 30
+          unhealthyThreshold: 3
+          pickHostNameFromBackendHttpSettings: false
+          minServers: 0
+          match: {
+            statusCodes: [
+              '200-399'
+            ]
           }
         }
       }
