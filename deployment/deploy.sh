@@ -1,12 +1,15 @@
 #!/bin/bash
 clear
+NC='\033[0m' # No Color
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 LIGHTGREEN='\033[1;32m'
 
 unique=$(echo $RANDOM | md5sum | head -c 8)
 
-location='eastus2'
+printf "${LIGHTGREEN}Type the Azure region you wish to use (no spaces and all lowercase. i.e., 'westcentralus'):\n${NC}"
+read location
+
 resourceGroupName="aks-$unique"
 
 clusterName="aks-$unique"
