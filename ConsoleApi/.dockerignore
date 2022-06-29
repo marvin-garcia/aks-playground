@@ -1,0 +1,3 @@
+.venv/
+requests.http
+ConsoleApi/__pycache__/
