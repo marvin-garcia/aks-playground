@@ -61,71 +61,72 @@ var aksTemplateLink = 'https://raw.githubusercontent.com/${repoOrgName}/${repoNa
 var vnetPeeringName = 'vnet-peering'
 var vnetPeeringTemplateLink = 'https://raw.githubusercontent.com/${repoOrgName}/${repoName}/${repoBranchName}/Templates/vnet-peering.bicep'
 
+resource aksdeployment 'Microsoft.Resources/deployments@2021-04-01' = {
+  name: aksDeploymentName
+  location: location
+  properties: {
+    mode: 'Incremental'
+    templateLink: {
+      uri: aksTemplateLink
+    }
+    parameters: {
+      location: { value: location }
+      clusterName: { value: clusterName }
+      // clusterSku: { value: clusterSku }
+      // clusterTier: { value: clusterTier }
+      // kubernetesVersion: { value: kubernetesVersion }
+      // vmSize: { value: vmSize }
+      // vmDiskSize: { value: vmDiskSize }
+      // minNodeCount: { value: minNodeCount }
+      // maxNodeCount: { value: maxNodeCount }
+      // networkPlugin: { value: networkPlugin }
+      // podCidr: { value: podCidr }
+      // serviceCidr: { value: serviceCidr }
+      // dnsServiceIp: { value: dnsServiceIp }
+      // dockerBridgeAddress: { value: dockerBridgeAddress }
+      // nodepoolName: { value: nodepoolName }
+      // adminUsername: { value: adminUsername }
+      publicSshKey: { value: publicSshKey }
+      virtualNetworkName: { value: aksVirtualNetworkName }
+      virtualNetworkPrefix: { value: aksVirtualNetworkPrefix }
+      subnetName: { value: aksSubnetName }
+      subnetAddressPrefix: { value: aksSubnetAddressPrefix }
+    }
+  }
+}
+
 resource appGwdeployment 'Microsoft.Resources/deployments@2021-04-01' = {
   name: appGwDeploymentName
   properties: {
     mode: 'Incremental'
+    templateLink: {
+      uri: appGwTemplateLink
+    }
     parameters: {
-      applicationGatewayName: { value: appGwName }
-      tier: { value: appGwTier }
-      skuSize: { value: appGwSkuSize }
-      capacity: { value: appGwCapacity }
-      zones: { value: zones }
+      name: { value: appGwName }
+      // tier: { value: appGwTier }
+      // skuSize: { value: appGwSkuSize }
+      // capacity: { value: appGwCapacity }
+      // zones: { value: zones }
       virtualNetworkName: { value: appGwVirtualNetworkName }
       virtualNetworkPrefix: { value: [appGwVirtualNetworkPrefix] }
       subnetName: { value: appGwSubnetName }
       subnetAddressPrefix: { value: appGwSubnetAddressPrefix }
       publicIpAddressName: { value: appGwPublicIpAddressName }
       publicIpAddressDomainName: { value: appGwPublicIpAddressDomainName }
-      publicIpAddressSku: { value: appGwPublicIpAddressSku }
-      publicIpAddressAllocationMethod: { value: appGwPublicIpAddressAllocationMethod }
-      autoScaleMaxCapacity: { value: appGwAutoScaleMaxCapacity }
+      // publicIpAddressSku: { value: appGwPublicIpAddressSku }
+      // publicIpAddressAllocationMethod: { value: appGwPublicIpAddressAllocationMethod }
+      // autoScaleMaxCapacity: { value: appGwAutoScaleMaxCapacity }
       backendPoolIpAddress: { value: appGwBackendPoolIpAddress }
-      backendAddressPoolName: { value: appGwBackendAddressPoolName }
-      backendHttpSettingName: { value: appGwBackendHttpSettingName }
-      frontendIpConfigurationName: { value: appGwFrontendIpConfigurationName }
-      gatewayIpConfigurationName: { value: appGwGatewayIpConfigurationName }
-      httpListenerName: { value: appGwHttpListenerName }
-      requestRoutingRuleName: { value: appGwRequestRoutingRuleName }
-    }
-    templateLink: {
-      uri: appGwTemplateLink
+      // backendAddressPoolName: { value: appGwBackendAddressPoolName }
+      // backendHttpSettingName: { value: appGwBackendHttpSettingName }
+      // frontendIpConfigurationName: { value: appGwFrontendIpConfigurationName }
+      // gatewayIpConfigurationName: { value: appGwGatewayIpConfigurationName }
+      // httpListenerName: { value: appGwHttpListenerName }
+      // requestRoutingRuleName: { value: appGwRequestRoutingRuleName }
     }
   }
 }
-
-// resource aksdeployment 'Microsoft.Resources/deployments@2021-04-01' = {
-//   name: aksDeploymentName
-//   location: location
-//   properties: {
-//     mode: 'Incremental'
-//     parameters: {
-//       clusterName: clusterName
-//       clusterSku: clusterSku
-//       clusterTier: clusterTier
-//       kubernetesVersion: kubernetesVersion
-//       vmSize: vmSize
-//       vmDiskSize: vmDiskSize
-//       minNodeCount: minNodeCount
-//       maxNodeCount: maxNodeCount
-//       networkPlugin: networkPlugin
-//       podCidr: podCidr
-//       serviceCidr: serviceCidr
-//       dnsServiceIp: dnsServiceIp
-//       dockerBridgeAddress: dockerBridgeAddress
-//       nodepoolName: nodepoolName
-//       adminUsername: adminUsername
-//       publicSshKey: publicSshKey
-//       aksVirtualNetworkName: aksVirtualNetworkName
-//       aksVirtualNetworkPrefix: [aksVirtualNetworkPrefix]
-//       aksSubnetName: aksSubnetName
-//       aksSubnetAddressPrefix: aksSubnetAddressPrefix
-//     }
-//     templateLink: {
-//       uri: aksTemplateLink
-//     }
-//   }
-// }
 
 // resource vnetPeeringDeployment 'Microsoft.Resources/deployments@2021-04-01' = {
 //   name: vnetPeeringDeploymentName
