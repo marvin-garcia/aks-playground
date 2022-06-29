@@ -56,41 +56,37 @@ param unique string = substring(uniqueString(resourceGroup().id), 0, 4)
 var aksDeploymentName = 'aksDeployment-${unique}'
 var appGwDeploymentName = 'appGwDeployment-${unique}'
 var vnetPeeringDeploymentName = 'vnetPeering-${unique}'
-var appGwTemplateLink = 'https://raw.githubusercontent.com/$repoOrgName/$repoName/$repoBranchName/Templates/app-gw.bicep'
-var aksTemplateLink = 'https://raw.githubusercontent.com/$repoOrgName/$repoName/$repoBranchName/Templates/aks.bicep'
+var appGwTemplateLink = 'https://raw.githubusercontent.com/${repoOrgName}/${repoName}/${repoBranchName}/Templates/app-gw.bicep'
+var aksTemplateLink = 'https://raw.githubusercontent.com/${repoOrgName}/${repoName}/${repoBranchName}/Templates/aks.bicep'
 var vnetPeeringName = 'vnet-peering'
-var vnetPeeringTemplateLink = 'https://raw.githubusercontent.com/$repoOrgName/$repoName/$repoBranchName/Templates/vnet-peering.bicep'
+var vnetPeeringTemplateLink = 'https://raw.githubusercontent.com/${repoOrgName}/${repoName}/${repoBranchName}/Templates/vnet-peering.bicep'
 
 resource appGwdeployment 'Microsoft.Resources/deployments@2021-04-01' = {
   name: appGwDeploymentName
-  location: location
   properties: {
-    debugSetting: {
-      detailLevel: 'Debug'
-    }
     mode: 'Incremental'
     parameters: {
-      applicationGatewayName: applicationGatewayName
-      tier: appGwTier
-      skuSize: appGwSkuSize
-      capacity: appGwCapacity
-      zones: zones
-      appGwVirtualNetworkName: appGwVirtualNetworkName
-      appGwVirtualNetworkPrefix: [appGwVirtualNetworkPrefix]
-      appGwSubnetName: appGwSubnetName
-      appGwSubnetAddressPrefix: appGwSubnetAddressPrefix
-      publicIpAddressName: appGwPublicIpAddressName
-      publicIpAddressDomainName: appGwPublicIpAddressDomainName
-      publicIpAddressSku: appGwPublicIpAddressSku
-      publicIpAddressAllocationMethod: appGwPublicIpAddressAllocationMethod
-      autoScaleMaxCapacity: appGwAutoScaleMaxCapacity
-      backendPoolIpAddress: appGwBackendPoolIpAddress
-      backendAddressPoolName: appGwBackendAddressPoolName
-      backendHttpSettingName: appGwBackendHttpSettingName
-      frontendIpConfigurationName: appGwFrontendIpConfigurationName
-      gatewayIpConfigurationName: appGwGatewayIpConfigurationName
-      httpListenerName: appGwHttpListenerName
-      requestRoutingRuleName: appGwRequestRoutingRuleName
+      applicationGatewayName: { value: applicationGatewayName }
+      tier: { value: appGwTier }
+      skuSize: { value: appGwSkuSize }
+      capacity: { value: appGwCapacity }
+      zones: { value: zones }
+      virtualNetworkName: { value: appGwVirtualNetworkName }
+      virtualNetworkPrefix: { value: [appGwVirtualNetworkPrefix] }
+      subnetName: { value: appGwSubnetName }
+      subnetAddressPrefix: { value: appGwSubnetAddressPrefix }
+      publicIpAddressName: { value: appGwPublicIpAddressName }
+      publicIpAddressDomainName: { value: appGwPublicIpAddressDomainName }
+      publicIpAddressSku: { value: appGwPublicIpAddressSku }
+      publicIpAddressAllocationMethod: { value: appGwPublicIpAddressAllocationMethod }
+      autoScaleMaxCapacity: { value: appGwAutoScaleMaxCapacity }
+      backendPoolIpAddress: { value: appGwBackendPoolIpAddress }
+      backendAddressPoolName: { value: appGwBackendAddressPoolName }
+      backendHttpSettingName: { value: appGwBackendHttpSettingName }
+      frontendIpConfigurationName: { value: appGwFrontendIpConfigurationName }
+      gatewayIpConfigurationName: { value: appGwGatewayIpConfigurationName }
+      httpListenerName: { value: appGwHttpListenerName }
+      requestRoutingRuleName: { value: appGwRequestRoutingRuleName }
     }
     templateLink: {
       uri: appGwTemplateLink
@@ -102,9 +98,6 @@ resource appGwdeployment 'Microsoft.Resources/deployments@2021-04-01' = {
 //   name: aksDeploymentName
 //   location: location
 //   properties: {
-//     debugSetting: {
-//       detailLevel: 'Debug'
-//     }
 //     mode: 'Incremental'
 //     parameters: {
 //       clusterName: clusterName
