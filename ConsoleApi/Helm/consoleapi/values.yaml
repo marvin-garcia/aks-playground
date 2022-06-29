@@ -6,9 +6,9 @@ replicaCount: 1
 
 image:
   repository: marvingarcia/consoleapi
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "2"
+  tag: latest
 
 imagePullSecrets: []
 nameOverride: ""
