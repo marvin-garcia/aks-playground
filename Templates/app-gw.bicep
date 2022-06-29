@@ -5,7 +5,7 @@ param skuSize string = 'Standard_v2'
 param capacity int = 1
 param zones array = []
 param virtualNetworkName string
-param virtualNetworkPrefix array = [ '10.1.0.0/16' ]
+param virtualNetworkPrefix string = '10.1.0.0/16'
 param subnetName string = 'app-gw'
 param subnetAddressPrefix string = '10.1.0.0/24'
 param publicIpAddressName string
@@ -32,7 +32,7 @@ resource vnet 'Microsoft.Network/virtualNetworks@2021-08-01' = {
   location: location
   properties: {
     addressSpace: {
-      addressPrefixes: virtualNetworkPrefix
+      addressPrefixes: [virtualNetworkPrefix]
     }
     subnets: [
       {
