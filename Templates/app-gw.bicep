@@ -156,30 +156,6 @@ resource appGateway 'Microsoft.Network/applicationGateways@2021-08-01' = {
         }
       }
     ]
-    // probes: [
-    //   {
-    //     id: 'string'
-    //     name: 'string'
-    //     properties: {
-    //       host: 'string'
-    //       interval: int
-    //       match: {
-    //         body: 'string'
-    //         statusCodes: [
-    //           'string'
-    //         ]
-    //       }
-    //       minServers: int
-    //       path: 'string'
-    //       pickHostNameFromBackendHttpSettings: bool
-    //       pickHostNameFromBackendSettings: bool
-    //       port: int
-    //       protocol: 'string'
-    //       timeout: int
-    //       unhealthyThreshold: int
-    //     }
-    //   }
-    // ]
     sku: {
       tier: tier
       name: skuSize
