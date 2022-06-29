@@ -56,10 +56,10 @@ param unique string = substring(uniqueString(resourceGroup().id), 0, 4)
 var aksDeploymentName = 'aksDeployment-${unique}'
 var appGwDeploymentName = 'appGwDeployment-${unique}'
 var vnetPeeringDeploymentName = 'vnetPeering-${unique}'
-var appGwTemplateLink = 'https://github.com/${repoOrgName}/${repoName}/raw/${repoBranchName}/Templates/app-gw.bicep'
-var aksTemplateLink = 'https://github.com/${repoOrgName}/${repoName}/raw/${repoBranchName}/Templates/aks.bicep'
+var appGwTemplateLink = 'https://raw.githubusercontent.com/$repoOrgName/$repoName/$repoBranchName/Templates/app-gw.bicep'
+var aksTemplateLink = 'https://raw.githubusercontent.com/$repoOrgName/$repoName/$repoBranchName/Templates/aks.bicep'
 var vnetPeeringName = 'vnet-peering'
-var vnetPeeringTemplateLink = 'https://github.com/${repoOrgName}/${repoName}/raw/${repoBranchName}/Templates/vnet-peering.bicep'
+var vnetPeeringTemplateLink = 'https://raw.githubusercontent.com/$repoOrgName/$repoName/$repoBranchName/Templates/vnet-peering.bicep'
 
 resource appGwdeployment 'Microsoft.Resources/deployments@2021-04-01' = {
   name: appGwDeploymentName
