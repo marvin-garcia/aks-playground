@@ -50,8 +50,7 @@ ingress:
     nginx.ingress.kubernetes.io/rewrite-target: /$2
     nginx.ingress.kubernetes.io/use-regex: "false"
   hosts:
-    - host: marvaks.eastus2.cloudapp.azure.com
-      paths:
+    - paths:
         - path: /consoleapi(/|$)(.*)
           pathType: Prefix
   tls: []
