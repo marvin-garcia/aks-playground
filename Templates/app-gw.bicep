@@ -1,5 +1,5 @@
 param location string = resourceGroup().location
-param applicationGatewayName string
+param name string
 param tier string = 'Standard_v2'
 param skuSize string = 'Standard_v2'
 param capacity int = 1
@@ -23,7 +23,7 @@ param requestRoutingRuleName string = 'basic'
 
 var frontendPortNumber = 80
 var frontendPortName = 'port_${frontendPortNumber}'
-var applicationGatewayId = resourceId('Microsoft.Network/applicationGateways', applicationGatewayName)
+var applicationGatewayId = resourceId('Microsoft.Network/applicationGateways', name)
 var requestRuleType = 'Basic'
 
 // Virtual network
@@ -63,7 +63,7 @@ resource publicIp 'Microsoft.Network/publicIPAddresses@2021-08-01' = {
 
 // App Gateway
 resource appGateway 'Microsoft.Network/applicationGateways@2021-08-01' = {
-  name: applicationGatewayName
+  name: name
   location: location
   properties: {
     autoscaleConfiguration: {
