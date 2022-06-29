@@ -2,7 +2,9 @@ name: Console API Docker build
 on:
   push:
     paths:
-    - 'ConsoleApi/ConsoleApi/**'
+    - 'ConsoleApi/app/**'
+    - 'ConsoleApi/Dockerfile'
+    - 'ConsoleApi/requirements.txt'
   workflow_dispatch:
     inputs:
       comment:
@@ -10,8 +12,7 @@ on:
         required: false
 env:
   IMAGE_NAME: 'consoleapi'
-  ROOT_PATH: 'ConsoleApi/'
-  DOCKER_PATH: 'ConsoleApi/ConsoleApi'
+  DOCKER_PATH: 'ConsoleApi/'
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
@@ -30,7 +31,7 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
 
     - run: |
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ steps.image_tag.outputs.value }} -f ${{ env.DOCKER_PATH }}/Dockerfile ${{ env.ROOT_PATH }}
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ steps.image_tag.outputs.value }} -f ${{ env.DOCKER_PATH }}/Dockerfile ${{ env.DOCKER_PATH }}
         docker tag ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ steps.image_tag.outputs.value }} ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:latest
         docker push ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }} --all-tags
 
