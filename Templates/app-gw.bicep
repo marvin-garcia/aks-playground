@@ -29,7 +29,7 @@ var requestRuleType = 'Basic'
 // Virtual network
 resource vnet 'Microsoft.Network/virtualNetworks@2021-08-01' = {
   name: virtualNetworkName
-  location: location
+  // location: location
   properties: {
     addressSpace: {
       addressPrefixes: virtualNetworkPrefix
@@ -48,7 +48,7 @@ resource vnet 'Microsoft.Network/virtualNetworks@2021-08-01' = {
 // Public IP Address
 resource publicIp 'Microsoft.Network/publicIPAddresses@2021-08-01' = {
   name: publicIpAddressName
-  location: location
+  // location: location
   sku: {
     name: publicIpAddressSku
   }
@@ -64,7 +64,7 @@ resource publicIp 'Microsoft.Network/publicIPAddresses@2021-08-01' = {
 // App Gateway
 resource appGateway 'Microsoft.Network/applicationGateways@2021-08-01' = {
   name: applicationGatewayName
-  location: location
+  // location: location
   properties: {
     autoscaleConfiguration: {
       minCapacity: capacity
