@@ -1,0 +1,38 @@
+name: User API Docker build
+on:
+  push:
+    paths:
+    - 'UserApi/UserApi/**'
+  workflow_dispatch:
+    inputs:
+      comment:
+        description: 'Run comments'
+        required: false
+env:
+  IMAGE_NAME: 'userapi'
+  ROOT_PATH: 'UserApi/'
+  DOCKER_PATH: 'UserApi/UserApi'
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout GitHub Action
+      uses: actions/checkout@main
+
+    - name: Set image tag
+      id: image_tag
+      run: echo "::set-output name=value::$(date +'%y%m%d%H%M')"
+
+    - name: Build and push image
+      uses: azure/docker-login@v1
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+    - run: |
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ steps.image_tag.outputs.value }} -f ${{ env.DOCKER_PATH }}/Dockerfile ${{ env.ROOT_PATH }}
+        docker tag ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ steps.image_tag.outputs.value }} ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:latest
+        docker push ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }} --all-tags
+
+    outputs:
+      image_tag: ${{ steps.image_tag.outputs.value }}
