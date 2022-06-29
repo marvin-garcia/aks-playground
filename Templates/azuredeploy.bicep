@@ -47,19 +47,19 @@ param appGwHttpListenerName string = 'ingressListener'
 param appGwRequestRoutingRuleName string = 'basic'
 
 // Repo params
-param repoOrgName string
-param repoName string
-param repoBranchName string
+param repoOrgName string = 'marvin-garcia'
+param repoName string = 'aks-playground'
+param repoBranchName string = 'main'
 
 param unique string = substring(uniqueString(resourceGroup().id), 0, 4)
 
 var aksDeploymentName = 'aksDeployment-${unique}'
 var appGwDeploymentName = 'appGwDeployment-${unique}'
 var vnetPeeringDeploymentName = 'vnetPeering-${unique}'
-var appGwTemplateLink = 'https://github.com/${repoOrgName}/${repoName}/raw/${repoBranchName}/templates/app-gw.bicep'
-var aksTemplateLink = 'https://github.com/${repoOrgName}/${repoName}/raw/${repoBranchName}/templates/aks.bicep'
+var appGwTemplateLink = 'https://github.com/${repoOrgName}/${repoName}/raw/${repoBranchName}/Templates/app-gw.bicep'
+var aksTemplateLink = 'https://github.com/${repoOrgName}/${repoName}/raw/${repoBranchName}/Templates/aks.bicep'
 var vnetPeeringName = 'vnet-peering'
-var vnetPeeringTemplateLink = 'https://github.com/${repoOrgName}/${repoName}/raw/${repoBranchName}/templates/vnet-peering.bicep'
+var vnetPeeringTemplateLink = 'https://github.com/${repoOrgName}/${repoName}/raw/${repoBranchName}/Templates/vnet-peering.bicep'
 
 resource appGwdeployment 'Microsoft.Resources/deployments@2021-04-01' = {
   name: appGwDeploymentName
