@@ -20,7 +20,7 @@ param adminUsername string = 'azureuser'
 @secure()
 param publicSshKey string
 param aksVirtualNetworkName string
-param aksVirtualNetworkPrefix array = [ '10.0.0.0/16' ]
+param aksVirtualNetworkPrefix string = '10.0.0.0/16'
 param aksSubnetName string = 'aks'
 param aksSubnetAddressPrefix string = '10.0.0.0/24'
 
@@ -30,7 +30,7 @@ param appGwTier string = 'Standard_v2'
 param appGwSkuSize string = 'Standard_v2'
 param appGwCapacity int = 2
 param appGwVirtualNetworkName string
-param appGwVirtualNetworkPrefix array = [ '10.1.0.0/16' ]
+param appGwVirtualNetworkPrefix string = '10.1.0.0/16'
 param appGwSubnetName string = 'app-gw'
 param appGwSubnetAddressPrefix string = '10.1.0.0/24'
 param appGwPublicIpAddressName string
@@ -76,7 +76,7 @@ resource appGwdeployment 'Microsoft.Resources/deployments@2021-04-01' = {
       capacity: appGwCapacity
       zones: zones
       appGwVirtualNetworkName: appGwVirtualNetworkName
-      appGwVirtualNetworkPrefix: appGwVirtualNetworkPrefix
+      appGwVirtualNetworkPrefix: [appGwVirtualNetworkPrefix]
       appGwSubnetName: appGwSubnetName
       appGwSubnetAddressPrefix: appGwSubnetAddressPrefix
       publicIpAddressName: appGwPublicIpAddressName
@@ -124,7 +124,7 @@ resource appGwdeployment 'Microsoft.Resources/deployments@2021-04-01' = {
 //       adminUsername: adminUsername
 //       publicSshKey: publicSshKey
 //       aksVirtualNetworkName: aksVirtualNetworkName
-//       aksVirtualNetworkPrefix: aksVirtualNetworkPrefix
+//       aksVirtualNetworkPrefix: [aksVirtualNetworkPrefix]
 //       aksSubnetName: aksSubnetName
 //       aksSubnetAddressPrefix: aksSubnetAddressPrefix
 //     }
