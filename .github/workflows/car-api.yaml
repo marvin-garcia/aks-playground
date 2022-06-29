@@ -30,8 +30,9 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
 
     - run: |
-        docker build  -t ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ steps.image_tag.outputs.value }} -f ${{ env.DOCKER_PATH }}/Dockerfile ${{ env.ROOT_PATH }}
-        docker push ${{ secrets.DOCKER_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:${{ steps.image_tag.outputs.value }}
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ steps.image_tag.outputs.value }} -f ${{ env.DOCKER_PATH }}/Dockerfile ${{ env.ROOT_PATH }}
+        docker tag ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ steps.image_tag.outputs.value }} ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:latest
+        docker push ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ steps.image_tag.outputs.value }} --all-tags
 
     outputs:
       image_tag: ${{ steps.image_tag.outputs.value }}
