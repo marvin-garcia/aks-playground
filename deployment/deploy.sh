@@ -4,11 +4,13 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 LIGHTGREEN='\033[1;32m'
 
-location='eastus2'
-resourceGroupName='marv-aks-rg-7'
+unique=$(echo $RANDOM | md5sum | head -c 8)
 
-clusterPrefix='marv-aks'
-aksVnetNamePrefix='aks-vnet'
+location='eastus2'
+resourceGroupName="aks-$unique"
+
+clusterName="aks-$unique"
+aksVnetName="aks-vnet-$unique"
 aksVnetAddressPrefix='192.168.0.0/24'
 aksSubnetName='aks'
 aksSubnetAddressPrefix='192.168.0.0/24'
@@ -17,10 +19,10 @@ aksServiceCidr='10.10.0.0/24'
 aksDnsServiceIp='10.10.0.10'
 aksDockerBridgeAddress='172.17.0.1/16'
 
-appGwPrefix='marv-appgw'
-appGwVnetNamePrefix='appgw-vnet'
-appGwPublicIpNamePrefix='marv-appgw-ip'
-appGwPublicIpDomainNameLabel='marv-aks-apps-7'
+appGwName="appgw-$unique"
+appGwVnetName="appgw-vnet-$unique"
+appGwPublicIpName="appgw-ip-$unique"
+appGwPublicIpDomainNameLabel="aks-apps-$unique"
 appGwVnetAddressPrefix='192.168.1.0/24'
 appGwSubnetName='app-gw'
 appGwSubnetAddressPrefix='192.168.1.0/24'
@@ -34,14 +36,15 @@ az group create \
     -l $location
 
 # Deploy resources
+deploymentName="aks-deployment-$unique"
 az deployment group create \
     -g $resourceGroupName \
     --mode Incremental \
-    --name 'aks-deployment' \
+    --name $deploymentName \
     --template-file ./deployment/azuredeploy.bicep \
-    --parameters clusterNamePrefix=$clusterPrefix \
+    --parameters clusterName=$clusterName \
     --parameters publicSshKey=@~/.ssh/id_rsa.pub \
-    --parameters aksVirtualNetworkNamePrefix=$aksVnetNamePrefix \
+    --parameters aksVirtualNetworkName=$aksVnetName \
     --parameters aksVirtualNetworkPrefix=$aksVnetAddressPrefix \
     --parameters aksSubnetName=$aksSubnetName \
     --parameters aksSubnetAddressPrefix=$aksSubnetAddressPrefix \
@@ -49,14 +52,15 @@ az deployment group create \
     --parameters serviceCidr=$aksServiceCidr \
     --parameters dnsServiceIp=$aksDnsServiceIp \
     --parameters dockerBridgeAddress=$aksDockerBridgeAddress \
-    --parameters appGwNamePrefix=$appGwPrefix \
-    --parameters appGwVirtualNetworkNamePrefix=$appGwVnetNamePrefix \
+    --parameters appGwName=$appGwName \
+    --parameters appGwVirtualNetworkName=$appGwVnetName \
     --parameters appGwVirtualNetworkPrefix=$appGwVnetAddressPrefix \
     --parameters appGwSubnetName=$appGwSubnetName \
     --parameters appGwSubnetAddressPrefix=$appGwSubnetAddressPrefix \
-    --parameters appGwPublicIpAddressNamePrefix=$appGwPublicIpNamePrefix \
+    --parameters appGwPublicIpAddressName=$appGwPublicIpName \
     --parameters appGwPublicIpAddressDomainName=$appGwPublicIpDomainNameLabel \
-    --parameters appGwBackendPoolIpAddress=$ingressPrivateIpAddress
+    --parameters appGwBackendPoolIpAddress=$ingressPrivateIpAddress \
+    --parameters unique=$unique
 
 if [[ $? -gt 0 ]]
 then
@@ -123,9 +127,14 @@ helm upgrade \
     --namespace 'consoleapi' \
     -f ./ConsoleApi/Helm/consoleapi/values.yaml
 
-printf "${GREEN}Deployment finished successfully. Navigate to the following URLs to test each app:\n\n"
-printf "${LIGHTGREEN}http://$appGwPublicIpDomainNameLabel.$location.cloudapp.azure.com/carapi/cars\n"
-printf "${LIGHTGREEN}http://$appGwPublicIpDomainNameLabel.$location.cloudapp.azure.com/userapi/users/1\n"
-printf "${LIGHTGREEN}http://$appGwPublicIpDomainNameLabel.$location.cloudapp.azure.com/consoleapi/consoles/2\n"
+
+printf "${LIGHTGREEN}Deployment finished successfully.\n"
+printf "${GREEN}Resource Group name: $resourceGroupName\n\n"
+
+printf "${LIGHTGREEN}Navigate to the following URLs to test each app:\n\n"
+
+printf "${GREEN}http://$appGwPublicIpDomainNameLabel.$location.cloudapp.azure.com/carapi/cars\n"
+printf "${GREEN}http://$appGwPublicIpDomainNameLabel.$location.cloudapp.azure.com/userapi/users/1\n"
+printf "${GREEN}http://$appGwPublicIpDomainNameLabel.$location.cloudapp.azure.com/consoleapi/consoles/2\n"
 
 exit 0

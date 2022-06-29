@@ -2,7 +2,7 @@ param location string = resourceGroup().location
 param zones array = []
 
 // Cluster params
-param clusterNamePrefix string
+param clusterName string
 param clusterSku string = 'Basic'
 param clusterTier string = 'Free'
 param kubernetesVersion string = '1.22.6'
@@ -19,21 +19,21 @@ param nodepoolName string = 'nodepool1'
 param adminUsername string = 'azureuser'
 @secure()
 param publicSshKey string
-param aksVirtualNetworkNamePrefix string
+param aksVirtualNetworkName string
 param aksVirtualNetworkPrefix string = '10.0.0.0/16'
 param aksSubnetName string = 'aks'
 param aksSubnetAddressPrefix string = '10.0.0.0/24'
 
 // App Gateway params
-param appGwNamePrefix string
+param appGwName string
 param appGwTier string = 'Standard_v2'
 param appGwSkuSize string = 'Standard_v2'
 param appGwCapacity int = 1
-param appGwVirtualNetworkNamePrefix string
+param appGwVirtualNetworkName string
 param appGwVirtualNetworkPrefix string = '10.1.0.0/16'
 param appGwSubnetName string = 'app-gw'
 param appGwSubnetAddressPrefix string = '10.1.0.0/24'
-param appGwPublicIpAddressNamePrefix string
+param appGwPublicIpAddressName string
 param appGwPublicIpAddressDomainName string
 param appGwPublicIpAddressSku string = 'Standard'
 param appGwPublicIpAddressAllocationMethod string = 'Static'
@@ -49,14 +49,12 @@ param appGwProbeName string = 'ingressProbe'
 param unique string = substring(uniqueString(resourceGroup().id), 0, 4)
 
 var userIdentityName = 'aks-identity-${unique}'
-var roleAssignmentId = resourceId('Microsoft.Authorization/roleDefinitions', '4d97b98b-1d4f-4787-a291-c67834d212e7') // contributor role Id is 8e3af657-a8ff-443c-a75c-2fe8c4bcb635
+// The role Id used below is 'network contributor'. Check https://docs.microsoft.com/en-us/azure/role-based-access-control/built-in-roles
+var roleAssignmentId = resourceId('Microsoft.Authorization/roleDefinitions', '4d97b98b-1d4f-4787-a291-c67834d212e7')
 var roleAssignmentName = guid(identity.id, roleAssignmentId, resourceGroup().id)
-var clusterName = '${clusterNamePrefix}-${unique}'
-var aksVirtualNetworkName = '${aksVirtualNetworkNamePrefix}-${unique}'
-var appGwName = '${appGwNamePrefix}-${unique}'
-var appGwVirtualNetworkName = '${appGwVirtualNetworkNamePrefix}-${unique}'
-var appGwPublicIpAddressName = '${appGwPublicIpAddressNamePrefix}-${unique}'
-var workspaceName = '${clusterName}-${unique}-workspace'
+var clusterDnsPrefix = '${clusterName}-${unique}'
+var clusterNodeResourceGroup = 'MC_aks_${clusterName}_${location}'
+var workspaceName = 'aks-workspace-${unique}'
 var workspaceSku = 'pergb2018'
 var frontendPortNumber = 80
 var frontendPortName = 'port_${frontendPortNumber}'
@@ -136,7 +134,7 @@ resource managedCluster 'Microsoft.ContainerService/managedClusters@2022-05-02-p
   }
   properties: {
     kubernetesVersion: kubernetesVersion
-    dnsPrefix: '${clusterName}-${unique}'
+    dnsPrefix: clusterDnsPrefix
     agentPoolProfiles: [
       {
         name: nodepoolName
@@ -189,7 +187,7 @@ resource managedCluster 'Microsoft.ContainerService/managedClusters@2022-05-02-p
         }
       }
     }
-    nodeResourceGroup: 'MC_aks_${clusterName}_${location}-${unique}'
+    nodeResourceGroup: clusterNodeResourceGroup
     enableRBAC: true
     networkProfile: {
       networkPlugin: networkPlugin
