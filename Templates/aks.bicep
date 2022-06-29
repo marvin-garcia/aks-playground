@@ -17,7 +17,7 @@ param adminUsername string = 'azureuser'
 @secure()
 param publicSshKey string
 param virtualNetworkName string
-param virtualNetworkPrefix array = [ '10.0.0.0/16' ]
+param virtualNetworkPrefix string = '10.0.0.0/16'
 param subnetName string = 'aks'
 param subnetAddressPrefix string = '10.0.0.0/24'
 param unique string = substring(uniqueString(resourceGroup().id), 0, 4)
@@ -58,7 +58,7 @@ resource vnet 'Microsoft.Network/virtualNetworks@2021-08-01' = {
   location: location
   properties: {
     addressSpace: {
-      addressPrefixes: virtualNetworkPrefix
+      addressPrefixes: [virtualNetworkPrefix]
     }
     subnets: [
       {

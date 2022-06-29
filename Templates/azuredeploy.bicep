@@ -25,10 +25,10 @@ param aksSubnetName string = 'aks'
 param aksSubnetAddressPrefix string = '10.0.0.0/24'
 
 // App Gateway params
-param applicationGatewayName string
+param appGwName string
 param appGwTier string = 'Standard_v2'
 param appGwSkuSize string = 'Standard_v2'
-param appGwCapacity int = 2
+param appGwCapacity int = 1
 param appGwVirtualNetworkName string
 param appGwVirtualNetworkPrefix string = '10.1.0.0/16'
 param appGwSubnetName string = 'app-gw'
@@ -66,7 +66,7 @@ resource appGwdeployment 'Microsoft.Resources/deployments@2021-04-01' = {
   properties: {
     mode: 'Incremental'
     parameters: {
-      applicationGatewayName: { value: applicationGatewayName }
+      applicationGatewayName: { value: appGwName }
       tier: { value: appGwTier }
       skuSize: { value: appGwSkuSize }
       capacity: { value: appGwCapacity }
