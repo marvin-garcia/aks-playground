@@ -98,60 +98,60 @@ resource appGwdeployment 'Microsoft.Resources/deployments@2021-04-01' = {
   }
 }
 
-resource aksdeployment 'Microsoft.Resources/deployments@2021-04-01' = {
-  name: aksDeploymentName
-  location: location
-  properties: {
-    debugSetting: {
-      detailLevel: 'Debug'
-    }
-    mode: 'Incremental'
-    parameters: {
-      clusterName: clusterName
-      clusterSku: clusterSku
-      clusterTier: clusterTier
-      kubernetesVersion: kubernetesVersion
-      vmSize: vmSize
-      vmDiskSize: vmDiskSize
-      minNodeCount: minNodeCount
-      maxNodeCount: maxNodeCount
-      networkPlugin: networkPlugin
-      podCidr: podCidr
-      serviceCidr: serviceCidr
-      dnsServiceIp: dnsServiceIp
-      dockerBridgeAddress: dockerBridgeAddress
-      nodepoolName: nodepoolName
-      adminUsername: adminUsername
-      publicSshKey: publicSshKey
-      aksVirtualNetworkName: aksVirtualNetworkName
-      aksVirtualNetworkPrefix: aksVirtualNetworkPrefix
-      aksSubnetName: aksSubnetName
-      aksSubnetAddressPrefix: aksSubnetAddressPrefix
-    }
-    templateLink: {
-      uri: aksTemplateLink
-    }
-  }
-}
+// resource aksdeployment 'Microsoft.Resources/deployments@2021-04-01' = {
+//   name: aksDeploymentName
+//   location: location
+//   properties: {
+//     debugSetting: {
+//       detailLevel: 'Debug'
+//     }
+//     mode: 'Incremental'
+//     parameters: {
+//       clusterName: clusterName
+//       clusterSku: clusterSku
+//       clusterTier: clusterTier
+//       kubernetesVersion: kubernetesVersion
+//       vmSize: vmSize
+//       vmDiskSize: vmDiskSize
+//       minNodeCount: minNodeCount
+//       maxNodeCount: maxNodeCount
+//       networkPlugin: networkPlugin
+//       podCidr: podCidr
+//       serviceCidr: serviceCidr
+//       dnsServiceIp: dnsServiceIp
+//       dockerBridgeAddress: dockerBridgeAddress
+//       nodepoolName: nodepoolName
+//       adminUsername: adminUsername
+//       publicSshKey: publicSshKey
+//       aksVirtualNetworkName: aksVirtualNetworkName
+//       aksVirtualNetworkPrefix: aksVirtualNetworkPrefix
+//       aksSubnetName: aksSubnetName
+//       aksSubnetAddressPrefix: aksSubnetAddressPrefix
+//     }
+//     templateLink: {
+//       uri: aksTemplateLink
+//     }
+//   }
+// }
 
-resource vnetPeeringDeployment 'Microsoft.Resources/deployments@2021-04-01' = {
-  name: vnetPeeringDeploymentName
-  location: location
-  dependsOn: [
-    appGwdeployment
-    aksdeployment
-  ]
-  properties: {
-    mode: 'Incremental'
-    parameters: {
-      peeringName: vnetPeeringName
-      virtualNetowrk1Id: resourceId('Microsoft.Network/virtualNetworks', appGwVirtualNetworkName)
-      virtualNetwork1AddressPrefix: appGwVirtualNetworkPrefix
-      virtualnetwork2Id: resourceId('Microsoft.Network/virtualNetworks', aksVirtualNetworkName)
-      virtualNetwork2AddressPrefix: aksVirtualNetworkPrefix
-    }
-    templateLink: {
-      uri: vnetPeeringTemplateLink
-    }
-  }
-}
+// resource vnetPeeringDeployment 'Microsoft.Resources/deployments@2021-04-01' = {
+//   name: vnetPeeringDeploymentName
+//   location: location
+//   dependsOn: [
+//     appGwdeployment
+//     aksdeployment
+//   ]
+//   properties: {
+//     mode: 'Incremental'
+//     parameters: {
+//       peeringName: vnetPeeringName
+//       virtualNetowrk1Id: resourceId('Microsoft.Network/virtualNetworks', appGwVirtualNetworkName)
+//       virtualNetwork1AddressPrefix: appGwVirtualNetworkPrefix
+//       virtualnetwork2Id: resourceId('Microsoft.Network/virtualNetworks', aksVirtualNetworkName)
+//       virtualNetwork2AddressPrefix: aksVirtualNetworkPrefix
+//     }
+//     templateLink: {
+//       uri: vnetPeeringTemplateLink
+//     }
+//   }
+// }
