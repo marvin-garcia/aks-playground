@@ -2,7 +2,7 @@ param location string = resourceGroup().location
 param zones array = []
 
 // Cluster params
-param clusterName string
+param clusterNamePrefix string
 param clusterSku string = 'Basic'
 param clusterTier string = 'Free'
 param kubernetesVersion string = '1.22.6'
@@ -19,21 +19,21 @@ param nodepoolName string = 'nodepool1'
 param adminUsername string = 'azureuser'
 @secure()
 param publicSshKey string
-param aksVirtualNetworkName string
+param aksVirtualNetworkNamePrefix string
 param aksVirtualNetworkPrefix string = '10.0.0.0/16'
 param aksSubnetName string = 'aks'
 param aksSubnetAddressPrefix string = '10.0.0.0/24'
 
 // App Gateway params
-param appGwName string
+param appGwNamePrefix string
 param appGwTier string = 'Standard_v2'
 param appGwSkuSize string = 'Standard_v2'
 param appGwCapacity int = 1
-param appGwVirtualNetworkName string
+param appGwVirtualNetworkNamePrefix string
 param appGwVirtualNetworkPrefix string = '10.1.0.0/16'
 param appGwSubnetName string = 'app-gw'
 param appGwSubnetAddressPrefix string = '10.1.0.0/24'
-param appGwPublicIpAddressName string
+param appGwPublicIpAddressNamePrefix string
 param appGwPublicIpAddressDomainName string
 param appGwPublicIpAddressSku string = 'Standard'
 param appGwPublicIpAddressAllocationMethod string = 'Static'
@@ -45,107 +45,361 @@ param appGwFrontendIpConfigurationName string = 'appGwPublicFrontendIp'
 param appGwGatewayIpConfigurationName string = 'appGatewayIpConfig'
 param appGwHttpListenerName string = 'ingressListener'
 param appGwRequestRoutingRuleName string = 'basic'
-
-// Repo params
-param repoOrgName string = 'marvin-garcia'
-param repoName string = 'aks-playground'
-param repoBranchName string = 'main'
-
 param unique string = substring(uniqueString(resourceGroup().id), 0, 4)
 
-var aksDeploymentName = 'aksDeployment-${unique}'
-var appGwDeploymentName = 'appGwDeployment-${unique}'
-var vnetPeeringDeploymentName = 'vnetPeering-${unique}'
-var appGwTemplateLink = 'https://raw.githubusercontent.com/${repoOrgName}/${repoName}/${repoBranchName}/Templates/app-gw.bicep'
-var aksTemplateLink = 'https://raw.githubusercontent.com/${repoOrgName}/${repoName}/${repoBranchName}/Templates/aks.bicep'
+var clusterName = '${clusterNamePrefix}-${unique}'
+var aksVirtualNetworkName = '${aksVirtualNetworkNamePrefix}-${unique}'
+var appGwName = '${appGwNamePrefix}-${unique}'
+var appGwVirtualNetworkName = '${appGwVirtualNetworkNamePrefix}-${unique}'
+var appGwPublicIpAddressName = '${appGwPublicIpAddressNamePrefix}-${unique}'
+var workspaceName = '${clusterName}-${unique}-workspace'
+var workspaceSku = 'pergb2018'
+var frontendPortNumber = 80
+var frontendPortName = 'port_${frontendPortNumber}'
+var appGwId = resourceId('Microsoft.Network/applicationGateways', appGwName)
+var requestRuleType = 'Basic'
 var vnetPeeringName = 'vnet-peering'
-var vnetPeeringTemplateLink = 'https://raw.githubusercontent.com/${repoOrgName}/${repoName}/${repoBranchName}/Templates/vnet-peering.bicep'
 
-resource aksdeployment 'Microsoft.Resources/deployments@2021-04-01' = {
-  name: aksDeploymentName
+// Log Analytics workspace
+resource workspace 'Microsoft.OperationalInsights/workspaces@2021-12-01-preview' = {
+  name: workspaceName
   location: location
   properties: {
-    mode: 'Incremental'
-    templateLink: {
-      uri: aksTemplateLink
+    features: {
+      enableLogAccessUsingOnlyResourcePermissions: true
     }
-    parameters: {
-      location: { value: location }
-      clusterName: { value: clusterName }
-      // clusterSku: { value: clusterSku }
-      // clusterTier: { value: clusterTier }
-      // kubernetesVersion: { value: kubernetesVersion }
-      // vmSize: { value: vmSize }
-      // vmDiskSize: { value: vmDiskSize }
-      // minNodeCount: { value: minNodeCount }
-      // maxNodeCount: { value: maxNodeCount }
-      // networkPlugin: { value: networkPlugin }
-      // podCidr: { value: podCidr }
-      // serviceCidr: { value: serviceCidr }
-      // dnsServiceIp: { value: dnsServiceIp }
-      // dockerBridgeAddress: { value: dockerBridgeAddress }
-      // nodepoolName: { value: nodepoolName }
-      // adminUsername: { value: adminUsername }
-      publicSshKey: { value: publicSshKey }
-      virtualNetworkName: { value: aksVirtualNetworkName }
-      virtualNetworkPrefix: { value: aksVirtualNetworkPrefix }
-      subnetName: { value: aksSubnetName }
-      subnetAddressPrefix: { value: aksSubnetAddressPrefix }
+    publicNetworkAccessForIngestion: 'Emabled'
+    publicNetworkAccessForQuery: 'Enabled'
+    retentionInDays: 30
+    sku: {
+      name: workspaceSku
+    }
+    workspaceCapping: {
+      dailyQuotaGb: -1
     }
   }
 }
 
-resource appGwdeployment 'Microsoft.Resources/deployments@2021-04-01' = {
-  name: appGwDeploymentName
+// Virtual network
+resource aksVnet 'Microsoft.Network/virtualNetworks@2021-08-01' = {
+  name: aksVirtualNetworkName
+  location: location
   properties: {
-    mode: 'Incremental'
-    templateLink: {
-      uri: appGwTemplateLink
+    addressSpace: {
+      addressPrefixes: [aksVirtualNetworkPrefix]
     }
-    parameters: {
-      name: { value: appGwName }
-      // tier: { value: appGwTier }
-      // skuSize: { value: appGwSkuSize }
-      // capacity: { value: appGwCapacity }
-      // zones: { value: zones }
-      virtualNetworkName: { value: appGwVirtualNetworkName }
-      virtualNetworkPrefix: { value: [appGwVirtualNetworkPrefix] }
-      subnetName: { value: appGwSubnetName }
-      subnetAddressPrefix: { value: appGwSubnetAddressPrefix }
-      publicIpAddressName: { value: appGwPublicIpAddressName }
-      publicIpAddressDomainName: { value: appGwPublicIpAddressDomainName }
-      // publicIpAddressSku: { value: appGwPublicIpAddressSku }
-      // publicIpAddressAllocationMethod: { value: appGwPublicIpAddressAllocationMethod }
-      // autoScaleMaxCapacity: { value: appGwAutoScaleMaxCapacity }
-      backendPoolIpAddress: { value: appGwBackendPoolIpAddress }
-      // backendAddressPoolName: { value: appGwBackendAddressPoolName }
-      // backendHttpSettingName: { value: appGwBackendHttpSettingName }
-      // frontendIpConfigurationName: { value: appGwFrontendIpConfigurationName }
-      // gatewayIpConfigurationName: { value: appGwGatewayIpConfigurationName }
-      // httpListenerName: { value: appGwHttpListenerName }
-      // requestRoutingRuleName: { value: appGwRequestRoutingRuleName }
+    subnets: [
+      {
+        name: aksSubnetName
+        properties: {
+          addressPrefix: aksSubnetAddressPrefix
+        }
+      }
+    ]
+  }
+}
+
+// AKS cluster
+resource managedCluster 'Microsoft.ContainerService/managedClusters@2022-05-02-preview' = {
+  name: clusterName
+  location: location
+  sku: {
+    name: clusterSku
+    tier: clusterTier
+  }
+  identity: {
+    type: 'SystemAssigned'
+  }
+  properties: {
+    kubernetesVersion: kubernetesVersion
+    dnsPrefix: '${clusterName}-${unique}'
+    agentPoolProfiles: [
+      {
+        name: nodepoolName
+        count: minNodeCount
+        vmSize: vmSize
+        osDiskSizeGB: vmDiskSize
+        osDiskType: 'Managed'
+        kubeletDiskType: 'OS'
+        vnetSubnetID: resourceId('Microsoft.Network/virtualNetworks/subnets', aksVirtualNetworkName, aksSubnetName)
+        maxPods: 110
+        type: 'VirtualMachineScaleSets'
+        maxCount: maxNodeCount
+        minCount: minNodeCount
+        enableAutoScaling: true
+        powerState: {
+          code: 'Running'
+        }
+        orchestratorVersion: kubernetesVersion
+        enableNodePublicIP: false
+        enableCustomCATrust: false
+        mode: 'System'
+        enableEncryptionAtHost: false
+        enableUltraSSD: false
+        osType: 'Linux'
+        osSKU: 'Ubuntu'
+        enableFIPS: false
+      }
+    ]
+    linuxProfile: {
+      adminUsername: adminUsername
+      ssh: {
+        publicKeys: [
+          {
+            keyData: publicSshKey
+          }
+        ]
+      }
+    }
+    servicePrincipalProfile: {
+      clientId: 'msi'
+    }
+    addonProfiles: {
+      ingressApplicationGateway: {
+        enabled: false
+      }
+      omsagent: {
+        enabled: true
+        config: {
+          logAnalyticsWorkspaceResourceID: workspace.id
+        }
+      }
+    }
+    nodeResourceGroup: 'MC_aks_${clusterName}_${location}-${unique}'
+    enableRBAC: true
+    networkProfile: {
+      networkPlugin: networkPlugin
+      loadBalancerSku: 'Standard'
+      loadBalancerProfile: {
+        managedOutboundIPs: {
+          count: 1
+        }
+      }
+      podCidr: podCidr
+      serviceCidr: serviceCidr
+      dnsServiceIP: dnsServiceIp
+      dockerBridgeCidr: dockerBridgeAddress
+      outboundType: 'loadBalancer'
+      podCidrs: [
+        podCidr
+      ]
+      serviceCidrs: [
+        serviceCidr
+      ]
+      ipFamilies: [
+        'IPv4'
+      ]
+    }
+    autoScalerProfile: {
+      'balance-similar-node-groups': 'false'
+      expander: 'random'
+      'max-empty-bulk-delete': '10'
+      'max-graceful-termination-sec': '600'
+      'max-node-provision-time': '15m'
+      'max-total-unready-percentage': '45'
+      'new-pod-scale-up-delay': '0s'
+      'ok-total-unready-count': '3'
+      'scale-down-delay-after-add': '10m'
+      'scale-down-delay-after-delete': '10s'
+      'scale-down-delay-after-failure': '3m'
+      'scale-down-unneeded-time': '10m'
+      'scale-down-unready-time': '20m'
+      'scale-down-utilization-threshold': '0.5'
+      'scan-interval': '10s'
+      'skip-nodes-with-local-storage': 'false'
+      'skip-nodes-with-system-pods': 'true'
+    }
+    disableLocalAccounts: false
+    securityProfile: {}
+    storageProfile: {
+      diskCSIDriver: {
+        enabled: true
+        version: 'v1'
+      }
+      fileCSIDriver: {
+        enabled: true
+      }
+      snapshotController: {
+        enabled: true
+      }
+    }
+    oidcIssuerProfile: {
+      enabled: false
     }
   }
 }
 
-// resource vnetPeeringDeployment 'Microsoft.Resources/deployments@2021-04-01' = {
-//   name: vnetPeeringDeploymentName
-//   location: location
-//   dependsOn: [
-//     appGwdeployment
-//     aksdeployment
-//   ]
-//   properties: {
-//     mode: 'Incremental'
-//     parameters: {
-//       peeringName: vnetPeeringName
-//       virtualNetowrk1Id: resourceId('Microsoft.Network/virtualNetworks', appGwVirtualNetworkName)
-//       virtualNetwork1AddressPrefix: appGwVirtualNetworkPrefix
-//       virtualnetwork2Id: resourceId('Microsoft.Network/virtualNetworks', aksVirtualNetworkName)
-//       virtualNetwork2AddressPrefix: aksVirtualNetworkPrefix
-//     }
-//     templateLink: {
-//       uri: vnetPeeringTemplateLink
-//     }
-//   }
-// }
+// Virtual network
+resource appGwVnet 'Microsoft.Network/virtualNetworks@2021-08-01' = {
+  name: appGwVirtualNetworkName
+  location: location
+  properties: {
+    addressSpace: {
+      addressPrefixes: [ appGwVirtualNetworkPrefix ]
+    }
+    subnets: [
+      {
+        name: appGwSubnetName
+        properties: {
+          addressPrefix: appGwSubnetAddressPrefix
+        }
+      }
+    ]
+  }
+}
+
+// Public IP Address
+resource publicIp 'Microsoft.Network/publicIPAddresses@2021-08-01' = {
+  name: appGwPublicIpAddressName
+  location: location
+  sku: {
+    name: appGwPublicIpAddressSku
+  }
+  properties: {
+    publicIPAllocationMethod: appGwPublicIpAddressAllocationMethod
+    dnsSettings: {
+      domainNameLabel: appGwPublicIpAddressDomainName
+    }
+  }
+  zones: zones
+}
+
+// App Gateway
+resource appGateway 'Microsoft.Network/applicationGateways@2021-08-01' = {
+  name: appGwName
+  location: location
+  properties: {
+    autoscaleConfiguration: {
+      minCapacity: appGwCapacity
+      maxCapacity: appGwAutoScaleMaxCapacity
+    }
+    backendAddressPools: [
+      {
+        name: appGwBackendAddressPoolName
+        properties: {
+          backendAddresses: [
+            {
+              fqdn: ''
+              ipAddress: appGwBackendPoolIpAddress
+            }
+          ]
+        }
+      }
+    ]
+    backendHttpSettingsCollection: [
+      {
+        name: appGwBackendHttpSettingName
+        properties: {
+          port: 80
+          protocol: 'Http'
+          cookieBasedAffinity: 'Disabled'
+          requestTimeout: 20
+        }
+      }
+    ]
+    backendSettingsCollection: []
+    frontendIPConfigurations: [
+      {
+        name: appGwFrontendIpConfigurationName
+        properties: {
+          publicIPAddress: {
+            id: publicIp.id
+          }
+        }
+      }
+    ]
+    frontendPorts: [
+      {
+        name: frontendPortName
+        properties: {
+          port: frontendPortNumber
+        }
+      }
+    ]
+    gatewayIPConfigurations: [
+      {
+        name: appGwGatewayIpConfigurationName
+        properties: {
+          subnet: {
+            id: resourceId('Microsoft.Network/virtualNetworks/subnets', appGwVirtualNetworkName, appGwSubnetName)
+          }
+        }
+      }
+    ]
+    httpListeners: [
+      {
+        name: appGwHttpListenerName
+        properties: {
+          frontendIPConfiguration: {
+            id: '${appGwId}/frontendIPConfigurations/${appGwFrontendIpConfigurationName}'
+          }
+          frontendPort: {
+            id: '${appGwId}/frontendPorts/${frontendPortName}'
+          }
+          protocol: 'Http'
+        }
+      }
+    ]
+    listeners: []
+    requestRoutingRules: [
+      {
+        name: appGwRequestRoutingRuleName
+        properties: {
+          priority: 1
+          ruleType: requestRuleType
+          backendAddressPool: {
+            id: '${appGwId}/backendAddressPools/${appGwBackendAddressPoolName}'
+          }
+          backendHttpSettings: {
+            id: '${appGwId}/backendHttpSettingsCollection/${appGwBackendHttpSettingName}'
+          }
+          httpListener: {
+            id: '${appGwId}/httpListeners/${appGwHttpListenerName}'
+          }
+        }
+      }
+    ]
+    sku: {
+      tier: appGwTier
+      name: appGwSkuSize
+    }
+  }
+  zones: zones
+}
+
+
+resource aksVnetPeering 'Microsoft.Network/virtualNetworks/virtualNetworkPeerings@2021-08-01' = {
+  name: vnetPeeringName
+  parent: aksVnet
+  properties: {
+    allowForwardedTraffic: true
+    allowGatewayTransit: false
+    allowVirtualNetworkAccess: true
+    doNotVerifyRemoteGateways: true
+    useRemoteGateways: false
+    remoteAddressSpace: {
+      addressPrefixes: [ appGwVirtualNetworkPrefix ]
+    }
+    remoteVirtualNetwork: {
+      id: appGwVnet.id
+    }
+  }
+}
+
+resource appgwVnetPeering 'Microsoft.Network/virtualNetworks/virtualNetworkPeerings@2021-08-01' = {
+  name: vnetPeeringName
+  parent: appGwVnet
+  properties: {
+    allowForwardedTraffic: true
+    allowGatewayTransit: false
+    allowVirtualNetworkAccess: true
+    doNotVerifyRemoteGateways: true
+    useRemoteGateways: false
+    remoteAddressSpace: {
+      addressPrefixes: [ aksVirtualNetworkPrefix ]
+    }
+    remoteVirtualNetwork: {
+      id: aksVnet.id
+    }
+  }
+}
