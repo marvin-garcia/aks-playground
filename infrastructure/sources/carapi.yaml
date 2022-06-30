@@ -6,4 +6,4 @@ spec:
   interval: 5m
   secretRef:
     name: acr
-  url: https://marvacr.azurecr.io/helm/carapi:v1
+  url: https://marvacr.azurecr.io/helm/v1/carapi:1.0.0
