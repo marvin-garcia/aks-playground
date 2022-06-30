@@ -351,4 +351,4 @@ MigrationBackup/
 /New folder/Api1/Api1/appsettings.Development.json
 ConsoleApi/.venv/**
 
-**/Helm/**.tgz
+**/*.tgz
