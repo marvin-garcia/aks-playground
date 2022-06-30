@@ -1,0 +1,9 @@
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: carapi
+spec:
+  interval: 5m
+  secretRef:
+    name: acr
+  url: https://marvacr.azurecr.io/helm/carapi:v1
