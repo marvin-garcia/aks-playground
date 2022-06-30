@@ -7,7 +7,7 @@
     ```
     git clone https://github.com/marvin-garcia/aks-playground.git
     ```
-2. Run the deployment script
+2. Run the deployment script:
     ```
     cd aks-playground
     ./deployment/deploy.sh
