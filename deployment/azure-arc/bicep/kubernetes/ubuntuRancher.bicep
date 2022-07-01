@@ -52,7 +52,7 @@ param deployBastion bool = false
 var publicIpAddressName = '${vmName}-PIP'
 var networkInterfaceName = '${vmName}-NIC'
 var osDiskType = 'Premium_LRS'
-var PublicIPNoBastion = {
+var publicIpAddressRef = {
   id: publicIpAddress.id
 }
 
@@ -69,14 +69,14 @@ resource networkInterface 'Microsoft.Network/networkInterfaces@2021-03-01' = {
             id: subnetId
           }
           privateIPAllocationMethod: 'Dynamic'
-          publicIPAddress: deployBastion== false  ? PublicIPNoBastion : json('null')
+          publicIPAddress: publicIpAddressRef
         }
       }
     ]
   }
 }
 
-resource publicIpAddress 'Microsoft.Network/publicIpAddresses@2021-03-01' {
+resource publicIpAddress 'Microsoft.Network/publicIpAddresses@2021-03-01' = {
   name: publicIpAddressName
   location: azureLocation
   properties: {
@@ -149,7 +149,7 @@ resource vmInstallscriptK3s 'Microsoft.Compute/virtualMachines/extensions@2021-0
     autoUpgradeMinorVersion: true
     settings: {}
     protectedSettings: {
-      commandToExecute: 'bash installK3s.sh ${adminUsername} ${spnClientId} ${spnClientSecret} ${spnTenantId} ${vmName} ${azureLocation} ${stagingStorageAccountName} ${logAnalyticsWorkspace} ${deployBastion}'
+      commandToExecute: 'bash installK3s.sh ${adminUsername} ${spnClientId} ${spnClientSecret} ${spnTenantId} ${vmName} ${azureLocation} ${stagingStorageAccountName} ${logAnalyticsWorkspace} ${deployBastion} ${publicIpAddress.properties.ipAddress}'
       fileUris: [
         '${templateBaseUrl}artifacts/installK3s.sh'
       ]

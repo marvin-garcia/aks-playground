@@ -1,6 +1,15 @@
+@description('Username for the Virtual Machine')
+param adminUsername string = 'arcuser'
+
 @description('RSA public key used for securing SSH access to ArcBox resources')
 @secure()
 param sshRSAPublicKey string
+
+@description('The of Virtual Machines to deploy')
+param vmCount int = 1
+
+@description('The name prefix of you Virtual Machines')
+param vmNamePrefix string = 'k3s'
 
 @description('Azure service principal client id')
 param spnClientId string
@@ -31,9 +40,11 @@ var templateBaseUrl = 'https://raw.githubusercontent.com/${githubAccount}/${gith
 
 var location = resourceGroup().location
 
-module ubuntuRancherDeployment 'kubernetes/ubuntuRancher.bicep' = {
-  name: 'ubuntuRancherDeployment'
+module ubuntuRancherDeployment 'kubernetes/ubuntuRancher.bicep' = [for count in range(0, vmCount): {
+  name: 'ubuntuRancherDeployment-${count}'
   params: {
+    adminUsername: adminUsername
+    vmName: '${vmNamePrefix}-${count}'
     sshRSAPublicKey: sshRSAPublicKey
     spnClientId: spnClientId
     spnClientSecret: spnClientSecret
@@ -45,7 +56,7 @@ module ubuntuRancherDeployment 'kubernetes/ubuntuRancher.bicep' = {
     deployBastion: deployBastion
     azureLocation: location
   }
-}
+}]
 
 module stagingStorageAccountDeployment 'mgmt/mgmtStagingStorage.bicep' = {
   name: 'stagingStorageAccountDeployment'
