@@ -11,7 +11,7 @@ Test repo to practice and learn about deploying applications to Kubernetes on Az
 2. Run the deployment script:
     ```
     cd aks-playground
-    ./deployment/deploy.sh
+    ./deployment/aks/deploy.sh
     ```
 
 ## Getting started with Arc-Enabled Kubernetes Clusters
