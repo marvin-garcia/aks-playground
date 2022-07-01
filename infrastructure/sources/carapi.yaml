@@ -3,7 +3,8 @@ kind: HelmRepository
 metadata:
   name: carapi
 spec:
+  # type: "oci"
   interval: 5m
   secretRef:
     name: acr
-  url: https://marvacr.azurecr.io/helm/v1/carapi:1.0.0
+  url: oci://marvacr.azurecr.io/helm/carapi:1.0.0
