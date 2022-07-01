@@ -26,3 +26,4 @@ spec:
     service:
       type: NodePort
       port: 8000
+    replicaCount: 4
