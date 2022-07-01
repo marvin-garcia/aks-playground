@@ -8,4 +8,4 @@ spec:
   # secretRef:
   #   name: acr
   # url: oci://marvacr.azurecr.io/helm/carapi:1.0.0
-  url: https://marvin-garcia.github.io/aks-playground/carapi:1.0.0
+  url: https://marvin-garcia.github.io/aks-playground/
