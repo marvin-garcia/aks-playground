@@ -76,7 +76,7 @@ resource networkInterface 'Microsoft.Network/networkInterfaces@2021-03-01' = {
   }
 }
 
-resource publicIpAddress 'Microsoft.Network/publicIpAddresses@2021-03-01' = if(deployBastion == false){
+resource publicIpAddress 'Microsoft.Network/publicIpAddresses@2021-03-01' {
   name: publicIpAddressName
   location: azureLocation
   properties: {
