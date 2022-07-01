@@ -40,7 +40,7 @@ var templateBaseUrl = 'https://raw.githubusercontent.com/${githubAccount}/${gith
 
 var location = resourceGroup().location
 
-module ubuntuRancherDeployment 'kubernetes/ubuntuRancher.bicep' = [for count in range(0, vmCount): {
+module ubuntuRancherDeployment 'kubernetes/ubuntuRancher.bicep' = [for count in range(1, vmCount + 1): {
   name: 'ubuntuRancherDeployment-${count}'
   params: {
     adminUsername: adminUsername
