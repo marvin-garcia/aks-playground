@@ -142,9 +142,22 @@ resource networkSecurityGroup 'Microsoft.Network/networkSecurityGroups@2021-03-0
         }
       }
       {
-        name: 'allow_traefik_lb_external'
+        name: 'allow_k8s_kubectl'
         properties: {
           priority: 1007
+          protocol: 'Tcp'
+          access: 'Allow'
+          direction: 'Inbound'
+          sourceAddressPrefix: '*'
+          sourcePortRange: '*'
+          destinationAddressPrefix: '*'
+          destinationPortRange: '6443'
+        }
+      }
+      {
+        name: 'allow_traefik_lb_external'
+        properties: {
+          priority: 1008
           protocol: 'Tcp'
           access: 'Allow'
           direction: 'Inbound'
@@ -157,7 +170,7 @@ resource networkSecurityGroup 'Microsoft.Network/networkSecurityGroups@2021-03-0
       {
         name: 'allow_SQLMI_traffic'
         properties: {
-          priority: 1008
+          priority: 1009
           protocol: 'Tcp'
           access: 'Allow'
           direction: 'Inbound'
@@ -170,7 +183,7 @@ resource networkSecurityGroup 'Microsoft.Network/networkSecurityGroups@2021-03-0
       {
         name: 'allow_Postgresql_traffic'
         properties: {
-          priority: 1009
+          priority: 1010
           protocol: 'Tcp'
           access: 'Allow'
           direction: 'Inbound'
