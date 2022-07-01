@@ -44,7 +44,7 @@ az deployment group create \
     -g $resourceGroupName \
     --mode Incremental \
     --name $deploymentName \
-    --template-file ./deployment/azuredeploy.bicep \
+    --template-file ./deployment/aks/azuredeploy.bicep \
     --parameters clusterName=$clusterName \
     --parameters publicSshKey=@~/.ssh/id_rsa.pub \
     --parameters aksVirtualNetworkName=$aksVnetName \
