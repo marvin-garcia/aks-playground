@@ -27,7 +27,7 @@ param githubBranch string = 'main'
 @description('Choice to deploy Bastion to connect to the client VM')
 param deployBastion bool = false
 
-var templateBaseUrl = 'https://raw.githubusercontent.com/${githubAccount}/${githubRepo}/${githubBranch}'
+var templateBaseUrl = 'https://raw.githubusercontent.com/${githubAccount}/${githubRepo}/${githubBranch}/deployment/azure-arc/'
 
 var location = resourceGroup().location
 
