@@ -21,4 +21,8 @@ spec:
       retries: 3
   values:
     ingress:
-      className: nginx
+      enabled: false
+    #   className: nginx
+    service:
+      type: NodePort
+      port: 8000
