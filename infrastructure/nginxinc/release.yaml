@@ -14,7 +14,8 @@ spec:
         name: nginx-stable
         namespace: cluster-config
       version: "2.2.2"
-  interval: 1h0m0s
+  # interval: 1h0m0s
+  interval: 5m
   install:
     remediation:
       retries: 3
