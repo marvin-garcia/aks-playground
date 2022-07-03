@@ -8,14 +8,14 @@ spec:
   releaseName: nginx-ingress
   chart:
     spec:
-      chart: nginx-stable
+      chart: nginx-stable/nginx-ingress
       sourceRef:
         kind: HelmRepository
         name: nginxinc
         namespace: cluster-config
       version: "2.2.2"
   # interval: 1h0m0s
-  interval: 5m
+  interval: 5m0s
   install:
     remediation:
       retries: 3
