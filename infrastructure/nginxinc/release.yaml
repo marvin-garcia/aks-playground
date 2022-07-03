@@ -5,13 +5,13 @@ metadata:
   namespace: cluster-config
 spec:
   targetNamespace: nginx
-  releaseName: ingress-nginx-controller
+  releaseName: nginx-ingress
   chart:
     spec:
-      chart: nginx-ingress-controller
+      chart: nginx-stable
       sourceRef:
         kind: HelmRepository
-        name: nginx-stable
+        name: nginxinc
         namespace: cluster-config
       version: "2.2.2"
   # interval: 1h0m0s
