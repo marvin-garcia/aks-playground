@@ -5,12 +5,12 @@
 # spec:
 #   interval: 30m
 #   url: https://kubernetes.github.io/ingress-nginx
-apiVersion: source.toolkit.fluxcd.io/v1beta1
+apiVersion: source.toolkit.fluxcd.io/v1beta2
 kind: GitRepository
 metadata:
   name: ingress-nginx
 spec:
-  interval: 30m
+  interval: 5m
   url: https://github.com/marvin-garcia/aks-playground
   ref:
     branch: main
