@@ -1,0 +1,28 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: nginx
+  namespace: cluster-config
+spec:
+  targetNamespace: nginx
+  releaseName: ingress-nginx-controller
+  chart:
+    spec:
+      chart: nginx-ingress-controller
+      sourceRef:
+        kind: HelmRepository
+        name: nginx-stable
+        namespace: cluster-config
+      version: "2.2.2"
+  interval: 1h0m0s
+  install:
+    remediation:
+      retries: 3
+  # Default values
+  # https://github.com/nginxinc/kubernetes-ingress/blob/main/deployments/helm-chart/values.yaml
+  values:
+    controller:
+      ingressClass:
+        name: nginx
+      service:
+        type: NodePort
