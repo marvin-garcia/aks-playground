@@ -1,20 +1,20 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: nginx
+  name: nginx-ingress
   namespace: cluster-config
 spec:
   targetNamespace: nginx
-  releaseName: ingress-nginx-controller
+  releaseName: nginx-ingress
   chart:
     spec:
-      chart: nginx-ingress-controller
-      sourceRef:
-        kind: HelmRepository
-        name: ingress-nginx
-        namespace: cluster-config
-      version: "4.1.4"
-  interval: 1h0m0s
+      chart: ./infrastructure/ingress-nginx/chart
+      # sourceRef:
+      #   kind: HelmRepository
+      #   name: ingress-nginx
+      #   namespace: cluster-config
+      # version: "4.1.4"
+  interval: 1h
   install:
     remediation:
       retries: 3
@@ -24,9 +24,11 @@ spec:
     controller:
       ingressClassByName: true
       ingressClassResource:
-        controllerValue: k8s.io/ingress-test
+        controllerValue: k8s.io/nginx
         enabled: true
         name: nginx
       replicaCount: 2
       service:
         type: NodePort
+      repository: k8s.gcr.io/ingress-nginx/controller
+        tag: "v1.1.1"
