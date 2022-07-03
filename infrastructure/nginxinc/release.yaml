@@ -1,7 +1,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: nginx
+  name: nginx-ingress
   namespace: cluster-config
 spec:
   targetNamespace: nginx
@@ -13,9 +13,8 @@ spec:
         kind: HelmRepository
         name: nginxinc
         namespace: cluster-config
-      version: "2.2.2"
-  # interval: 1h0m0s
-  interval: 5m0s
+      version: "0.13.2"
+  interval: 5m
   install:
     remediation:
       retries: 3
