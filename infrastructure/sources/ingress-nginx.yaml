@@ -1,16 +1,16 @@
-# apiVersion: source.toolkit.fluxcd.io/v1beta1
-# kind: HelmRepository
-# metadata:
-#   name: ingress-nginx
-# spec:
-#   interval: 30m
-#   url: https://kubernetes.github.io/ingress-nginx
-apiVersion: source.toolkit.fluxcd.io/v1beta2
-kind: GitRepository
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
 metadata:
   name: ingress-nginx
 spec:
-  interval: 5m
-  url: https://github.com/marvin-garcia/aks-playground
-  ref:
-    branch: main
+  interval: 30m
+  url: https://marvin-garcia.github.io/aks-playground/
+# apiVersion: source.toolkit.fluxcd.io/v1beta2
+# kind: GitRepository
+# metadata:
+#   name: ingress-nginx
+# spec:
+#   interval: 5m
+#   url: https://github.com/marvin-garcia/aks-playground
+#   ref:
+#     branch: main
