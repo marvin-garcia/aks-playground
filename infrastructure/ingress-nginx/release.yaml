@@ -8,7 +8,7 @@ spec:
   releaseName: nginx-ingress
   chart:
     spec:
-      # chart: ./infrastructure/ingress-nginx/ingress-nginx-4.0.17.tgz
+      chart: ingress-nginx
       sourceRef:
         kind: HelmRepository
         name: ingress-nginx
