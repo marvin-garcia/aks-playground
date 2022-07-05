@@ -21,9 +21,8 @@ spec:
       retries: 3
   values:
     ingress:
-      enabled: false
-    #   className: nginx
+      enabled: true
+      className: nginx
     service:
-      type: NodePort
-      port: 8000
-    replicaCount: 4
+      type: ClusterIP
+    replicaCount: 2
