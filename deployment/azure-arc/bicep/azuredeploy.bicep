@@ -1,3 +1,6 @@
+@description('Deployment Region')
+param location string = resourceGroup().location
+
 @description('Username for the Virtual Machine')
 param adminUsername string = 'arcuser'
 
@@ -6,11 +9,19 @@ param adminUsername string = 'arcuser'
 param sshRSAPublicKey string
 
 @description('The of Virtual Machines to deploy')
-param vmCount int = 1
+param vmCount int = 2
 
 @description('The name prefix of you Virtual Machines')
 param vmNamePrefix string = 'k3s'
 
+@description('Arc Virtual Network Address Prefix')
+param addressPrefix string = '172.16.0.0/16'
+
+@description('Arc Virtual Network Subnet Address Prefix')
+param arcSubnetAddressPrefix string = '172.16.1.0/24'
+
+@description('Bastion Virtual Network Subnet Address Prefix')
+param bastionSubnetAddressPrefix string = '172.16.3.64/26'
 @description('Azure service principal client id')
 param spnClientId string
 
@@ -37,14 +48,15 @@ param githubBranch string = 'main'
 param deployBastion bool = false
 
 var templateBaseUrl = 'https://raw.githubusercontent.com/${githubAccount}/${githubRepo}/${githubBranch}/deployment/azure-arc/'
-
-var location = resourceGroup().location
+var privateIpBaseAddress = '${split(arcSubnetAddressPrefix, '.')[0]}.${split(arcSubnetAddressPrefix, '.')[1]}.${split(arcSubnetAddressPrefix, '.')[2]}'
+var privateIpAddressStartCount = 4
 
 module ubuntuRancherDeployment 'kubernetes/ubuntuRancher.bicep' = [for count in range(1, vmCount + 1): {
   name: 'ubuntuRancherDeployment-${count}'
   params: {
     adminUsername: adminUsername
     vmName: '${vmNamePrefix}-${count}'
+    privateIpAddress: '${privateIpBaseAddress}.${privateIpAddressStartCount + vmCount - 1}'
     sshRSAPublicKey: sshRSAPublicKey
     spnClientId: spnClientId
     spnClientSecret: spnClientSecret
@@ -71,5 +83,15 @@ module mgmtArtifactsAndPolicyDeployment 'mgmt/mgmtArtifacts.bicep' = {
     workspaceName: logAnalyticsWorkspaceName
     deployBastion: deployBastion
     location: location
+    addressPrefix: addressPrefix
+    arcSubnetAddressPrefix: arcSubnetAddressPrefix
+    bastionSubnetAddressPrefix: bastionSubnetAddressPrefix
   }
 }
+
+output arcBox array = [for count in range(1, vmCount + 1): {
+  id: ubuntuRancherDeployment[count].outputs.id
+  vmName: '${vmNamePrefix}-${count}'
+  privateIpAddress: ubuntuRancherDeployment[count].outputs.privateIpAddress
+  publicIpAddress: ubuntuRancherDeployment[count].outputs.publicIpAddress
+}]

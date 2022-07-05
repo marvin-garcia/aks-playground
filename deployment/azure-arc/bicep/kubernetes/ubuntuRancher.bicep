@@ -23,6 +23,9 @@ param vmSize string = 'Standard_D4s_v4'
 @description('Resource Id of the subnet in the virtual network')
 param subnetId string
 
+@description('Private IP Address')
+param privateIpAddress string
+
 param resourceTags object = {
   Project: 'jumpstart_arcbox'
 }
@@ -52,6 +55,7 @@ param deployBastion bool = false
 var publicIpAddressName = '${vmName}-PIP'
 var networkInterfaceName = '${vmName}-NIC'
 var osDiskType = 'Premium_LRS'
+var publicIpAddressDomainNameLabel = vmName
 var publicIpAddressRef = {
   id: publicIpAddress.id
 }
@@ -68,7 +72,8 @@ resource networkInterface 'Microsoft.Network/networkInterfaces@2021-03-01' = {
           subnet: {
             id: subnetId
           }
-          privateIPAllocationMethod: 'Dynamic'
+          privateIPAllocationMethod: 'Static'
+          privateIPAddress: privateIpAddress
           publicIPAddress: publicIpAddressRef
         }
       }
@@ -83,6 +88,10 @@ resource publicIpAddress 'Microsoft.Network/publicIpAddresses@2021-03-01' = {
     publicIPAllocationMethod: 'Static'
     publicIPAddressVersion: 'IPv4'
     idleTimeoutInMinutes: 4
+    dnsSettings: {
+      domainNameLabel: publicIpAddressDomainNameLabel
+    }
+    
   }
   sku: {
     name: 'Basic'
@@ -156,3 +165,8 @@ resource vmInstallscriptK3s 'Microsoft.Compute/virtualMachines/extensions@2021-0
     }
   }
 }
+
+output id string = vm.id
+output vmName string = vmName
+output privateIpAddress string = networkInterface.properties.ipConfigurations[0].properties.privateIPAddress
+output publicIpAddress string = publicIpAddress.properties.ipAddress
