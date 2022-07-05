@@ -8,11 +8,11 @@ spec:
   releaseName: nginx-ingress
   chart:
     spec:
-      chart: ./infrastructure/ingress-nginx/ingress-nginx-4.0.17.tgz
-      # sourceRef:
-      #   kind: HelmRepository
-      #   name: ingress-nginx
-      #   namespace: cluster-config
+      # chart: ./infrastructure/ingress-nginx/ingress-nginx-4.0.17.tgz
+      sourceRef:
+        kind: HelmRepository
+        name: ingress-nginx
+        namespace: cluster-config
       # version: "4.1.4"
   interval: 1h
   install:
