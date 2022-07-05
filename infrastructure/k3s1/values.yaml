@@ -6,13 +6,7 @@ metadata:
 spec:
   values:
     controller:
-      ingressClassByName: true
-      ingressClassResource:
-        enabled: true
-        name: nginx
-        controllerValue: k8s.io/nginx
-      replicaCount: 2
       service:
         type: LoadBalancer
         externalIPs:
-        - '172.16.1.4'
+        - '172.16.1.5'

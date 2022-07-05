@@ -24,11 +24,7 @@ spec:
     controller:
       ingressClassByName: true
       ingressClassResource:
-        controllerValue: k8s.io/nginx
         enabled: true
         name: nginx
+        controllerValue: k8s.io/nginx
       replicaCount: 2
-      service:
-        type: NodePort
-      repository: k8s.gcr.io/ingress-nginx/controller
-        tag: "v1.1.1"
