@@ -4,3 +4,4 @@ namespace: cluster-config
 resources:
   - ingress-nginx.yaml
   - carapi.yaml
+  - userapi.yaml

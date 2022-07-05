@@ -1,0 +1,10 @@
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: userapi
+spec:
+  type: "oci"
+  interval: 5m
+  secretRef:
+    name: acr
+  url: oci://marvacr.azurecr.io/helm/userapi:0.1.0
