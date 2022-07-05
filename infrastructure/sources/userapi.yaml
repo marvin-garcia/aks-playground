@@ -3,7 +3,7 @@ kind: HelmRepository
 metadata:
   name: userapi
 spec:
-  type: "oci"
+  type: oci
   interval: 5m
   secretRef:
     name: acr
