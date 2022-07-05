@@ -41,7 +41,7 @@ entries:
       artifacthub.io/prerelease: "false"
     apiVersion: v2
     appVersion: 1.1.1
-    created: "2022-07-05T09:00:52.317437448-04:00"
+    created: "2022-07-05T12:03:45.274272127-04:00"
     description: Ingress controller for Kubernetes using NGINX as a reverse proxy
       and load balancer
     digest: 4afc5857d8d356656e9396eba0d96d03dce800ebaa2d381039825f25c43b14de
@@ -58,6 +58,6 @@ entries:
     - https://github.com/kubernetes/ingress-nginx
     type: application
     urls:
-    - https://marvin-garcia.github.io/aks-playground/ingress-nginx-4.0.17.tgz
+    - https://marvin-garcia.github.io/aks-playground/infrastructure/ingress-nginx/ingress-nginx-4.0.17.tgz
     version: 4.0.17
-generated: "2022-07-05T09:00:52.313058885-04:00"
+generated: "2022-07-05T12:03:45.269518903-04:00"
