@@ -15,7 +15,7 @@ spec:
         kind: HelmRepository
         name: userapi
         namespace: cluster-config
-  interval: 5m0s
+  interval: 1m
   install:
     remediation:
       retries: 3
