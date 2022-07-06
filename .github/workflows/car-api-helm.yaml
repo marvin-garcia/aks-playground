@@ -15,7 +15,7 @@ jobs:
       repo_url: 'https://marvin-garcia.github.io/aks-playground/'
       package_path: 'CarApi/Helm/'
       chart_path: 'CarApi/Helm/carapi/'
-      gh_username: ${{ env.GH_USERNAME }}
-      gh_email: ${{ env.GH_EMAIL }}
+      gh_username: ${{ secrets.GH_USERNAME }}
+      gh_email: ${{ secrets.GH_EMAIL }}
     secrets:
       gh_token: ${{ secrets.GITHUB_TOKEN }}
