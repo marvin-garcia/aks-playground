@@ -71,4 +71,15 @@ entries:
     urls:
     - https://marvin-garcia.github.io/aks-playground/infrastructure/ingress-nginx/ingress-nginx-4.0.17.tgz
     version: 4.0.17
-generated: "2022-07-06T18:18:50.649623825Z"
+  webapp:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2022-07-06T18:21:11.577764894Z"
+    description: A Helm chart for Kubernetes
+    digest: 86108d350764e34f8e4c06dfd1ffa1c0e3ff0b26656f79c8fb2dbedf82a49207
+    name: webapp
+    type: application
+    urls:
+    - https://marvin-garcia.github.io/aks-playground/WebApp/Helm/webapp-0.1.0.tgz
+    version: 0.1.0
+generated: "2022-07-06T18:21:11.577042598Z"
