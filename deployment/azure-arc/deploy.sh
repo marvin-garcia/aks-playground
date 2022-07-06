@@ -68,9 +68,6 @@ then
     exit 1
 fi
 
-# Install jq
-sudo apt install -y jq
-
 for (( c=0; c<$vmCount; c++))
 do
     vm=$(echo $output | jq -r ".arcBox.value[$c]")
@@ -183,6 +180,16 @@ EOF
     fi
 done
 
-echo -e "\n$(tput setaf 3)Deployment finished successfully$(tput setaf 7)"
-echo -e "$(tput setaf 3)Resource Group name: $resourceGroupName$(tput setaf 7)"
+echo -e "\n$(tput setaf 2)Deployment finished successfully$(tput setaf 7)"
+echo -e "$(tput setaf 2)Resource Group name: $resourceGroupName$(tput setaf 7)"
+
+echo -e "$(tput setaf 3)\nCluster(s) public endpoints: $(echo $output | jq -r ".arcBox.value[].publicIpAddress")$(tput setaf 7)"
+for (( c=0; c<$vmCount; c++))
+do
+    vm=$(echo $output | jq -r ".arcBox.value[$c]")
+    vmName=$(echo $vm | jq -r ".vmName")
+
+    echo -e "$(tput setaf 2)http://$vmName.$location.cloudapp.azure.com/$(tput setaf 7)"
+done
+
 exit 0
