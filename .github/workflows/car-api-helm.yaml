@@ -1,0 +1,25 @@
+name: Car API Helm Package
+on:
+  push:
+    paths:
+    - 'CarApi/Helm/carapi/**'
+  workflow_dispatch:
+    inputs:
+      comment:
+        description: 'Run comments'
+        required: false
+env:
+  GH_REPO_URL: 'https://marvin-garcia.github.io/aks-playground/'
+  HELM_PKG_PATH: 'CarApi/Helm/'
+  HELM_CHART_PATH: 'CarApi/Helm/carapi/'
+jobs:
+  call-helm-package:
+    uses: marvin-garcia/aks-playground/.github/workflows/helm-package.yaml@main
+    with:
+      repo_url: ${{ env.GH_REPO_URL }}
+      package_path: ${{ env.HELM_PKG_PATH }}
+      chart_path: ${{ env.HELM_CHART_PATH }}
+      gh_username: ${{ env.GH_USERNAME }}
+      gh_email: ${{ env.GH_EMAIL }}
+    secrets:
+      gh_token: ${{ secrets.GITHUB_TOKEN }}

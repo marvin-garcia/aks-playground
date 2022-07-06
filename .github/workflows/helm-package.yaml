@@ -1,0 +1,56 @@
+name: Helm Package
+on:
+  workflow_call:
+    inputs:
+      repo_url:
+        required: true
+        type: string
+      package_path:
+        required: true
+        type: string
+      chart_path:
+        required: true
+        type: string
+      gh_username:
+        required: true
+        type: string
+      gh_email:
+        required: true
+        type: string
+    secrets:
+      gh_token:
+        required: true
+
+jobs:
+  helm-package:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout GitHub Action
+      uses: actions/checkout@main
+
+    - name: Package chart
+      run: |
+        helm package ${{ inputs.chart_path }} -d ${{ inputs.package_path }}
+
+    - name: Create index file
+      run: |
+        helm repo index --url ${{ inputs.repo_url }} ${{ inputs.package_path }}
+
+    - name: Merge index files
+      run: |
+        helm repo index --url ${{ inputs.repo_url }}${{ inputs.package_path }} ${{ inputs.package_path }} --merge ./index.yaml
+        mv ${{ inputs.package_path }}/index.yaml" ./index.yaml
+
+    - name: Commit changes
+      run: |
+        git config --local user.email ${{ inputs.gh_email }}
+        git config --local user.name ${{ inputs.gh_username }}
+        git add ${{ inputs.package_path }}*.tgz
+        git add ./index.yaml
+        git commit -m "Updated Helm index"
+
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.gh_token }}
+        branch: ${{ github.ref }}

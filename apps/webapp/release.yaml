@@ -25,6 +25,12 @@ spec:
     ingress:
       enabled: true
       className: nginx
+      annotations:
+        nginx.ingress.kubernetes.io/rewrite-target: /
+      hosts:
+        - paths:
+            - path: /
+              pathType: Prefix
     service:
       type: ClusterIP
     replicaCount: 2
