@@ -1,8 +1,8 @@
-name: Car API Helm Package
+name: User API Helm Package
 on:
   push:
     paths:
-    - 'CarApi/Helm/carapi/**'
+    - 'UserApi/Helm/userapi/**'
   workflow_dispatch:
     inputs:
       comment:
@@ -13,8 +13,8 @@ jobs:
     uses: marvin-garcia/aks-playground/.github/workflows/helm-package.yaml@main
     with:
       repo_url: 'https://marvin-garcia.github.io/aks-playground/'
-      package_path: 'CarApi/Helm/'
-      chart_path: 'CarApi/Helm/carapi/'
+      package_path: 'UserApi/Helm/'
+      chart_path: 'UserApi/Helm/userapi/'
       gh_username: marvingarcia
       gh_email: noreply@github.com
     secrets:

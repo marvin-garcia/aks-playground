@@ -1,8 +1,8 @@
-name: Car API Helm Package
+name: NGINX Ingress Helm Package
 on:
   push:
     paths:
-    - 'CarApi/Helm/carapi/**'
+    - 'infrastructure/ingress-nginx/chart/**'
   workflow_dispatch:
     inputs:
       comment:
@@ -13,8 +13,8 @@ jobs:
     uses: marvin-garcia/aks-playground/.github/workflows/helm-package.yaml@main
     with:
       repo_url: 'https://marvin-garcia.github.io/aks-playground/'
-      package_path: 'CarApi/Helm/'
-      chart_path: 'CarApi/Helm/carapi/'
+      package_path: 'infrastructure/ingress-nginx/'
+      chart_path: 'infrastructure/ingress-nginx/chart/'
       gh_username: marvingarcia
       gh_email: noreply@github.com
     secrets:
