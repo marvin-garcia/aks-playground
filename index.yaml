@@ -1,3 +1,14 @@
 apiVersion: v1
 entries:
-generated: "2022-07-06T13:28:56.164874713-04:00"
+  carapi:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2022-07-06T18:08:07.664201793Z"
+    description: A Helm chart for Kubernetes
+    digest: b2b350ce2e71896ae16a16b26511f4fcd9fa961964719de471ca319664246656
+    name: carapi
+    type: application
+    urls:
+    - https://marvin-garcia.github.io/aks-playground/CarApi/Helm/carapi-1.0.0.tgz
+    version: 1.0.0
+generated: "2022-07-06T18:08:07.663430524Z"
