@@ -11,10 +11,9 @@ spec:
         kind: HelmRepository
         name: ingress-nginx
         namespace: cluster-config
-      # version: "4.0.17"
   values:
     controller:
       service:
         type: LoadBalancer
         externalIPs:
-        - '172.16.1.5'
+        - ''
