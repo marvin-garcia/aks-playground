@@ -349,4 +349,6 @@ MigrationBackup/
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
 /New folder/Api1/Api1/appsettings.Development.json
-ingress-nginx/ConsoleApi/.venv/
+ConsoleApi/.venv/**
+deployment/azure-arc/gitops-deploy.sh
+!deployment/azure-arc/artifacts/
