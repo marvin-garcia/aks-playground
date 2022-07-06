@@ -68,9 +68,6 @@ then
     exit 1
 fi
 
-# Install jq
-sudo apt install -y jq
-
 for (( c=0; c<$vmCount; c++))
 do
     vm=$(echo $output | jq -r ".arcBox.value[$c]")
