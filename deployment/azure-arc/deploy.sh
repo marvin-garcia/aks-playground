@@ -59,6 +59,7 @@ output=$(az deployment group create \
     --parameters spnTenantId=$tenantId \
     --parameters logAnalyticsWorkspaceName=$workspaceName \
     --parameters githubBranch=$repoBranch \
+    --parameters deployBastion=true \
     --query 'properties.outputs' -o json)
 
 if [[ $? -gt 0 ]]
