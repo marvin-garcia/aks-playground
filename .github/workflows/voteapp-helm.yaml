@@ -8,16 +8,42 @@ on:
       comment:
         description: 'Run comments'
         required: false
+env:
+  # REPO_URL: 'https://marvin-garcia.github.io/aks-playground/'
+  REPO_URL: 'https://raw.githubusercontent.com/marvin-garcia/aks-playground/'
+  PACKAGE_PATH: 'VoteApp/Helm/'
+  CHART_PATH: 'VoteApp/Helm/voteapp/'
+  GH_USERNAME: 'marvingarcia'
+  GH_EMAIL: 'noreply@github.com'
 jobs:
+  env-setup:
+    name: Set up env vars
+    runs-on: ubuntu-latest
+    steps:
+      - id: repo_url
+        run: run: echo "::set-output name=value::${{ env.REPO_URL }}${{ env.GITHUB_REF_NAME }}"
+      - id: package_path
+        run: run: echo "::set-output name=value::${{ env.PACKAGE_PATH }}"
+      - id: chart_path
+        run: run: echo "::set-output name=value::${{ env.CHART_PATH }}"
+      - id: github_username
+        run: run: echo "::set-output name=value::${{ env.GH_USERNAME }}"
+      - id: github_email
+        run: run: echo "::set-output name=value::${{ env.GH_EMAIL }}"
+    outputs:
+      repo_url: ${{ steps.repo_url.outputs.value }}
+      package_path: ${{ steps.package_path.outputs.value }}
+      chart_path: ${{ steps.chart_path.outputs.value }}
+      github_username: ${{ steps.github_username.outputs.value }}
+      github_email: ${{ steps.github_email.outputs.value }}
+
   call-helm-package:
     uses: marvin-garcia/aks-playground/.github/workflows/helm-package.yaml@main
     with:
-      # repo_url: 'https://marvin-garcia.github.io/aks-playground/'
-      repo_url: 'https://raw.githubusercontent.com/marvin-garcia/aks-playground/'
-      repo_branch: ${{ env.GITHUB_REF_NAME }}
-      package_path: 'VoteApp/Helm/'
-      chart_path: 'VoteApp/Helm/voteapp/'
-      gh_username: marvingarcia
-      gh_email: noreply@github.com
+      repo_url: ${{ needs.env-setup.outputs.repo_url }}
+      package_path: ${{ needs.env-setup.outputs.package_path }}
+      chart_path: ${{ needs.env-setup.outputs.chart_path }}
+      gh_username: ${{ needs.env-setup.outputs.github_username }}
+      gh_email: ${{ needs.env-setup.outputs.github_email }}
     secrets:
       gh_token: ${{ secrets.GITHUB_TOKEN }}

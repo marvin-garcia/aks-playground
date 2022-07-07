@@ -5,9 +5,6 @@ on:
       repo_url:
         required: true
         type: string
-      repo_branch:
-        required: true
-        type: string
       package_path:
         required: true
         type: string
@@ -39,11 +36,11 @@ jobs:
 
     - name: Create index file
       run: |
-        helm repo index --url ${{ inputs.repo_url }}${{ inputs.repo_branch }} ${{ inputs.package_path }}
+        helm repo index --url ${{ inputs.repo_url }} ${{ inputs.package_path }}
 
     - name: Merge index files
       run: |
-        helm repo index --url ${{ inputs.repo_url }}${{ inputs.repo_branch }}${{ inputs.package_path }} ${{ inputs.package_path }} --merge ./index.yaml
+        helm repo index --url ${{ inputs.repo_url }}${{ inputs.package_path }} ${{ inputs.package_path }} --merge ./index.yaml
         mv ${{ inputs.package_path }}/index.yaml ./index.yaml
 
     - name: Commit changes
