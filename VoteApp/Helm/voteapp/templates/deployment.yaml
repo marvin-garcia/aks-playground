@@ -50,6 +50,7 @@ spec:
           {{- with .Values.env }}
           env:
             {{- toYaml . | nindent 10 }}
+          {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
