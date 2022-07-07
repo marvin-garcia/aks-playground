@@ -147,24 +147,49 @@ Now that you have a high level understanding of the key concepts and the structu
 
 ## Getting Started
 
-1. 
-2. Once you are in your Azure Cloud Shell or your local Linux environment (see the prerequisites section above for more information), clone the repository:
+1. You must fork the repo to your account so you can commit changes related to the clusters' ingress configuration. On your browser, go to `https://github.com/marvin-garcia/aks-playground`, click the `Fork` button on the top right corner and follow the instructions to add it to your GitHub's organization.
+
+![fork-repo](../../docs/github-fork.png)
+
+2. Open Azure Cloud Shell or a local Linux console (see the prerequisites section above for more information), clone the repository you just forked:
 
 ```bash
-git clone https://github.com/marvin-garcia/aks-playground.git
+git clone https://github.com/<your-github-org-name>/aks-playground.git
 ```
 
-2. Run the AKS deployment script and follow the wizard instructions:
+3. The deployment wizard will create new files and commit them to your repo. If you want to avoid hosting cluster configurations for infrastructure that you won't care about, consider creating a new branch.
+   
+   > **NOTE:** This new branch will be associated with the Flux configuration of your clusters' environments. Changes in other branches of your repository won't have any effect in this environment.
+
+```bash
+git checkout -b <your-new-branch-name>
+```
+
+4. Run the Azure Arc deployment script and follow the wizard instructions:
 
 ```bash
 cd aks-playground
-./deployment/aks/deploy.sh
+./deployment/azure-arc/deploy.sh
 ```
 
-3. Once the deployment script has completed, it will print the endpoint to test each application that has been deployed in the cluster. It will look like the output below:
+5. Once the deployment script has completed, it will print the endpoint to test each application that has been deployed in the cluster. It will look like the output below:
 
 ```textile
-http://aks-apps-123456.eastus.cloudapp.azure.com/carapi/cars
-http://aks-apps-123456.eastus.cloudapp.azure.com/userapi/users/1
-http://aks-apps-123456.eastus.cloudapp.azure.com/consoleapi/consoles/1
+Resource Group name: arc-k8s-191ed606
+Cluster(s) public endpoints:
+- http://k3s-a24e4574-1.eastus2.cloudapp.azure.com/
+- http://k3s-a24e4574-3.eastus2.cloudapp.azure.com/
+- http://k3s-a24e4574-3.eastus2.cloudapp.azure.com/
 ```
+
+6. On your browser, navigate to any of the clusters' endpoints. You should reach to the **Welcome** .NET Core web application. Notice how it shows the app version **v.1.0.0** on the top right corner.
+
+7. Go back to the Azure Cloud Shell or your local Linux console and open the [web app release](../../apps/webapp/release.yaml) file. Change the property `values.image.tag` to `2207061349`. Commit and push your changes to your repo.
+
+8. Wait a few minutes until the Flux configuration has noticed the release change and pulled it to all the k3s clusters. On your browser, navigate to any of the clusters' endpoints. The app version should have changed to **v2.0**.
+
+
+
+> **NOTE:** You will notice that inside the `infrastructure` folder there are one or more folders with the names of the clusters you created through the deployment wizard. Explore the `release.yaml` and `kustomization.yaml` files to understand how to patch releases and apply environment-specific configurations at scale.
+
+
