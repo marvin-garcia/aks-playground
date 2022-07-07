@@ -31,11 +31,11 @@ jobs:
       - id: github_email
         run: echo "::set-output name=value::${{ env.GH_EMAIL }}"
     outputs:
-      repo_url: ${{ steps.repo_url.outputs.value }}
-      package_path: ${{ steps.package_path.outputs.value }}
-      chart_path: ${{ steps.chart_path.outputs.value }}
-      github_username: ${{ steps.github_username.outputs.value }}
-      github_email: ${{ steps.github_email.outputs.value }}
+      repo_url: ${{ steps.repo_url.outputs }}
+      package_path: ${{ steps.package_path.outputs }}
+      chart_path: ${{ steps.chart_path.outputs }}
+      github_username: ${{ steps.github_username.outputs }}
+      github_email: ${{ steps.github_email.outputs }}
 
   call-helm-package:
     uses: marvin-garcia/aks-playground/.github/workflows/helm-package.yaml@main
