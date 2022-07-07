@@ -28,7 +28,7 @@ jobs:
     - name: Checkout GitHub Action
       uses: actions/checkout@main
       with:
-        branch: ${{ github.ref }}
+        ref: ${{ github.ref }}
 
     - name: Package chart
       run: |

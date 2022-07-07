@@ -3,8 +3,6 @@ on:
   push:
     paths:
     - 'VoteApp/Helm/voteapp/**'
-    # branches:
-    # - main
   workflow_dispatch:
     inputs:
       comment:
