@@ -1,4 +1,4 @@
-# K8s Playground
+# aks-playground
 
 This repository is a safe place to practice and learn about deploying applications to Kubernetes on Azure.
 
