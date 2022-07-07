@@ -12,7 +12,7 @@ on:
         required: false
 env:
   IMAGE_NAME: 'voteapp'
-  ROOT_PATH: 'VoteApp/voteapp/'
+  ROOT_PATH: 'VoteApp/'
   DOCKER_PATH: 'VoteApp'
 jobs:
   build-and-push:
