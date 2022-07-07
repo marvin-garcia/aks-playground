@@ -1,16 +1,5 @@
 apiVersion: v1
 entries:
-  carapi:
-  - apiVersion: v2
-    appVersion: 1.16.0
-    created: "2022-07-06T18:08:07.664201793Z"
-    description: A Helm chart for Kubernetes
-    digest: b2b350ce2e71896ae16a16b26511f4fcd9fa961964719de471ca319664246656
-    name: carapi
-    type: application
-    urls:
-    - https://marvin-garcia.github.io/aks-playground/CarApi/Helm/carapi-1.0.0.tgz
-    version: 1.0.0
   ingress-nginx:
   - annotations:
       artifacthub.io/changes: |
@@ -71,26 +60,15 @@ entries:
     urls:
     - https://marvin-garcia.github.io/aks-playground/infrastructure/ingress-nginx/ingress-nginx-4.0.17.tgz
     version: 4.0.17
-  userapi:
+  voteapp:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2022-07-06T18:23:04.782442919Z"
+    created: "2022-07-07T17:09:42.025078385Z"
     description: A Helm chart for Kubernetes
-    digest: 1e078a99ac6221ad908718f50bbe1d85bbab8cf18d57e2cb9e52e6cc225e815e
-    name: userapi
+    digest: 63162ebbf1e42245837e02c6b920efd02ac8300d2357439e3066c6217ad9691d
+    name: voteapp
     type: application
     urls:
-    - https://marvin-garcia.github.io/aks-playground/UserApi/Helm/userapi-0.1.0.tgz
+    - https://marvin-garcia.github.io/aks-playground/VoteApp/Helm/voteapp-0.1.0.tgz
     version: 0.1.0
-  webapp:
-  - apiVersion: v2
-    appVersion: 1.16.0
-    created: "2022-07-06T18:21:11.577764894Z"
-    description: A Helm chart for Kubernetes
-    digest: 86108d350764e34f8e4c06dfd1ffa1c0e3ff0b26656f79c8fb2dbedf82a49207
-    name: webapp
-    type: application
-    urls:
-    - https://marvin-garcia.github.io/aks-playground/WebApp/Helm/webapp-0.1.0.tgz
-    version: 0.1.0
-generated: "2022-07-06T18:23:04.781770314Z"
+generated: "2022-07-07T17:09:42.024459476Z"

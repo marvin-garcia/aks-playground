@@ -1,10 +1,8 @@
-name: Console API Docker build
+name: Voting App Docker build
 on:
   push:
     paths:
-    - 'ConsoleApi/app/**'
-    - 'ConsoleApi/Dockerfile'
-    - 'ConsoleApi/requirements.txt'
+    - 'voteapp/voteapp/**'
     branches:
     - main
   workflow_dispatch:
@@ -13,8 +11,9 @@ on:
         description: 'Run comments'
         required: false
 env:
-  IMAGE_NAME: 'consoleapi'
-  DOCKER_PATH: 'ConsoleApi/'
+  IMAGE_NAME: 'voteapp'
+  ROOT_PATH: 'VoteApp/voteapp/'
+  DOCKER_PATH: 'VoteApp'
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
@@ -33,7 +32,7 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
 
     - run: |
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ steps.image_tag.outputs.value }} -f ${{ env.DOCKER_PATH }}/Dockerfile ${{ env.DOCKER_PATH }}
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ steps.image_tag.outputs.value }} -f ${{ env.DOCKER_PATH }}/Dockerfile ${{ env.ROOT_PATH }}
         docker tag ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ steps.image_tag.outputs.value }} ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:latest
         docker push ${{ secrets.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }} --all-tags
 

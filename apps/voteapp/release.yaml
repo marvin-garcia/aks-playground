@@ -1,0 +1,39 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: voteapp
+  namespace: cluster-config
+spec:
+  targetNamespace: voteapp
+  releaseName: voteapp
+  chart:
+    spec:
+      chart: voteapp
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        name: voteapp
+        namespace: cluster-config
+  interval: 5m
+  install:
+    remediation:
+      retries: 3
+  values:
+    image:
+      repository: marvingarcia/voteapp
+      tag: "2207071135"
+    env:
+    - name: REDIS
+      value: redis.redis.svc.cluster.local
+    - name: REDIS_PORT
+      value: "6379"
+    ingress:
+      enabled: true
+      className: nginx
+      annotations:
+        nginx.ingress.kubernetes.io/rewrite-target: /
+        nginx.ingress.kubernetes.io/use-regex: "false"
+      hosts:
+        - paths:
+            - path: /
+              pathType: Prefix
