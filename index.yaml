@@ -63,12 +63,12 @@ entries:
   voteapp:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2022-07-07T18:58:05.983188888Z"
+    created: "2022-07-07T19:00:46.614783587Z"
     description: A Helm chart for Kubernetes
-    digest: bcfa115e5d73339651934959e4c8c0b0955111436ebabf3f82a0444810810a49
+    digest: 06a3f4d5c689491812cfcd76ce97755b56d83b1fcd83a68a9af81894b879df57
     name: voteapp
     type: application
     urls:
-    - https://raw.githubusercontent.com/marvin-garcia/aks-playground/voteappVoteApp/Helm/voteapp-0.1.0.tgz
+    - https://raw.githubusercontent.com/marvin-garcia/aks-playground/voteapp/VoteApp/Helm/voteapp-0.1.0.tgz
     version: 0.1.0
-generated: "2022-07-07T18:58:05.981854735Z"
+generated: "2022-07-07T19:00:46.614095782Z"
