@@ -22,6 +22,15 @@ param networkSecurityGroupName string = 'ArcBox-NSG'
 @description('Name of the Bastion Network Security Group')
 param bastionNetworkSecurityGroupName string = 'ArcBox-Bastion-NSG'
 
+@description('Arc Virtual Network Address Prefix')
+param addressPrefix string = '172.16.0.0/16'
+
+@description('Arc Virtual Network Subnet Address Prefix')
+param arcSubnetAddressPrefix string = '172.16.1.0/24'
+
+@description('Bastion Virtual Network Subnet Address Prefix')
+param bastionSubnetAddressPrefix string = '172.16.3.64/26'
+
 var flavor = 'DevOps'
 var security = {
   name: 'Security(${workspaceName})'
@@ -29,13 +38,10 @@ var security = {
 }
 
 var automationAccountName = 'ArcBox-Automation-${uniqueString(resourceGroup().id)}'
-var subnetAddressPrefix = '172.16.1.0/24'
-var addressPrefix = '172.16.0.0/16'
 var automationAccountLocation = ((location == 'eastus') ? 'eastus2' : ((location == 'eastus2') ? 'eastus' : location))
 var bastionSubnetName = 'AzureBastionSubnet'
 var bastionSubnetRef = '${arcVirtualNetwork.id}/subnets/${bastionSubnetName}'
 var bastionName = 'ArcBox-Bastion'
-var bastionSubnetIpPrefix = '172.16.3.64/26'
 var bastionPublicIpAddressName = '${bastionName}-PIP'
 
 resource arcVirtualNetwork 'Microsoft.Network/virtualNetworks@2021-03-01' = {
@@ -51,7 +57,7 @@ resource arcVirtualNetwork 'Microsoft.Network/virtualNetworks@2021-03-01' = {
       {
         name: subnetName
         properties: {
-          addressPrefix: subnetAddressPrefix
+          addressPrefix: arcSubnetAddressPrefix
           privateEndpointNetworkPolicies: 'Enabled'
           privateLinkServiceNetworkPolicies: 'Enabled'
           networkSecurityGroup: {
@@ -62,7 +68,7 @@ resource arcVirtualNetwork 'Microsoft.Network/virtualNetworks@2021-03-01' = {
       {
         name: 'AzureBastionSubnet'
         properties: {
-          addressPrefix: bastionSubnetIpPrefix
+          addressPrefix: bastionSubnetAddressPrefix
           networkSecurityGroup: {
             id: bastionNetworkSecurityGroup.id
           }
@@ -72,7 +78,7 @@ resource arcVirtualNetwork 'Microsoft.Network/virtualNetworks@2021-03-01' = {
       {
         name: subnetName
         properties: {
-          addressPrefix: subnetAddressPrefix
+          addressPrefix: arcSubnetAddressPrefix
           privateEndpointNetworkPolicies: 'Enabled'
           privateLinkServiceNetworkPolicies: 'Enabled'
           networkSecurityGroup: {

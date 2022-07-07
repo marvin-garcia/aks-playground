@@ -1,5 +1,16 @@
 apiVersion: v1
 entries:
+  carapi:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2022-07-06T18:08:07.664201793Z"
+    description: A Helm chart for Kubernetes
+    digest: b2b350ce2e71896ae16a16b26511f4fcd9fa961964719de471ca319664246656
+    name: carapi
+    type: application
+    urls:
+    - https://marvin-garcia.github.io/aks-playground/CarApi/Helm/carapi-1.0.0.tgz
+    version: 1.0.0
   ingress-nginx:
   - annotations:
       artifacthub.io/changes: |
@@ -41,10 +52,10 @@ entries:
       artifacthub.io/prerelease: "false"
     apiVersion: v2
     appVersion: 1.1.1
-    created: "2022-07-05T12:03:45.274272127-04:00"
+    created: "2022-07-06T18:18:50.654310104Z"
     description: Ingress controller for Kubernetes using NGINX as a reverse proxy
       and load balancer
-    digest: 4afc5857d8d356656e9396eba0d96d03dce800ebaa2d381039825f25c43b14de
+    digest: 7589762f9948796f8ef31b09ac1d3d8bc2b5b4e3325dece7ee18c52f471dad34
     home: https://github.com/kubernetes/ingress-nginx
     icon: https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Nginx_logo.svg/500px-Nginx_logo.svg.png
     keywords:
@@ -60,15 +71,26 @@ entries:
     urls:
     - https://marvin-garcia.github.io/aks-playground/infrastructure/ingress-nginx/ingress-nginx-4.0.17.tgz
     version: 4.0.17
-  carapi:
+  userapi:
   - apiVersion: v2
     appVersion: 1.16.0
-    created: "2022-07-05T12:47:00.692989709-04:00"
+    created: "2022-07-06T18:23:04.782442919Z"
     description: A Helm chart for Kubernetes
-    digest: d852c138a978879940e95b78f54c14a12621615ddd8cd499b38052507efa2335
-    name: carapi
+    digest: 1e078a99ac6221ad908718f50bbe1d85bbab8cf18d57e2cb9e52e6cc225e815e
+    name: userapi
     type: application
     urls:
-    - https://marvin-garcia.github.io/aks-playground/CarApi/Helm/carapi-1.0.0.tgz
-    version: 1.0.0
-generated: "2022-07-05T12:05:54.778694167-04:00"
+    - https://marvin-garcia.github.io/aks-playground/UserApi/Helm/userapi-0.1.0.tgz
+    version: 0.1.0
+  webapp:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2022-07-06T18:21:11.577764894Z"
+    description: A Helm chart for Kubernetes
+    digest: 86108d350764e34f8e4c06dfd1ffa1c0e3ff0b26656f79c8fb2dbedf82a49207
+    name: webapp
+    type: application
+    urls:
+    - https://marvin-garcia.github.io/aks-playground/WebApp/Helm/webapp-0.1.0.tgz
+    version: 0.1.0
+generated: "2022-07-06T18:23:04.781770314Z"

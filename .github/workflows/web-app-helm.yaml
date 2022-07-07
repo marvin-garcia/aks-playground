@@ -1,0 +1,21 @@
+name: Web APP Helm Package
+on:
+  push:
+    paths:
+    - 'WebApp/Helm/webapp/**'
+  workflow_dispatch:
+    inputs:
+      comment:
+        description: 'Run comments'
+        required: false
+jobs:
+  call-helm-package:
+    uses: marvin-garcia/aks-playground/.github/workflows/helm-package.yaml@main
+    with:
+      repo_url: 'https://marvin-garcia.github.io/aks-playground/'
+      package_path: 'WebApp/Helm/'
+      chart_path: 'WebApp/Helm/webapp/'
+      gh_username: marvingarcia
+      gh_email: noreply@github.com
+    secrets:
+      gh_token: ${{ secrets.GITHUB_TOKEN }}

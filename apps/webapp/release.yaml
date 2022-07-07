@@ -2,27 +2,35 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: userapi
+  name: webapp
   namespace: cluster-config
 spec:
-  targetNamespace: userapi
-  releaseName: userapi
+  targetNamespace: webapp
+  releaseName: webapp
   chart:
     spec:
-      chart: userapi
+      chart: webapp
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
-        name: userapi
+        name: webapp
         namespace: cluster-config
   interval: 1m
   install:
     remediation:
       retries: 3
   values:
+    image:
+      tag: "2207061318"
     ingress:
       enabled: true
       className: nginx
+      annotations:
+        nginx.ingress.kubernetes.io/rewrite-target: /
+      hosts:
+        - paths:
+            - path: /
+              pathType: Prefix
     service:
       type: ClusterIP
-    replicaCount: 3
+    replicaCount: 2

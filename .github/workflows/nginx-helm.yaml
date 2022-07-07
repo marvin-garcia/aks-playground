@@ -1,0 +1,21 @@
+name: NGINX Ingress Helm Package
+on:
+  push:
+    paths:
+    - 'infrastructure/ingress-nginx/chart/**'
+  workflow_dispatch:
+    inputs:
+      comment:
+        description: 'Run comments'
+        required: false
+jobs:
+  call-helm-package:
+    uses: marvin-garcia/aks-playground/.github/workflows/helm-package.yaml@main
+    with:
+      repo_url: 'https://marvin-garcia.github.io/aks-playground/'
+      package_path: 'infrastructure/ingress-nginx/'
+      chart_path: 'infrastructure/ingress-nginx/chart/'
+      gh_username: marvingarcia
+      gh_email: noreply@github.com
+    secrets:
+      gh_token: ${{ secrets.GITHUB_TOKEN }}
