@@ -1,6 +1,6 @@
 # Deploying Apps to Azure Kubernetes Service (AKS)
 
-This repo will show you the basics of deploying containerized applications to AKS using Helm, exposing those apps through an Azure App Gateway  and distributing them through an NGINX Ingress controller, following the [Best practices for network connectivity and security for AKS](https://docs.microsoft.com/en-us/azure/aks/operator-best-practices-network#distribute-ingress-traffic). The diagram below illustrates the architecture diagram:
+This repo will show you the basics of deploying containerized applications to AKS using Helm, exposing those apps using an Azure App Gateway and distributing them through an NGINX Ingress controller, following the [Best practices for network connectivity and security for AKS](https://docs.microsoft.com/en-us/azure/aks/operator-best-practices-network#distribute-ingress-traffic). The image below illustrates the architecture diagram:
 
 
 
@@ -8,7 +8,7 @@ This repo will show you the basics of deploying containerized applications to AK
 
 
 
-> **NOTE:** This repository does not bring into consideration critical aspects like securing access to your cluster and internal resources, which are very important when considering running production workloads on AKS. For more information, check out the [Best practices for cluster security](https://docs.microsoft.com/en-us/azure/aks/operator-best-practices-cluster-security?tabs=azure-cli) article.
+> **NOTE:** This repository does not bring into consideration critical aspects like securing access to your cluster and internal resources, which are very important when you plan on running production workloads on AKS. For more information, check out the [Best practices for cluster security](https://docs.microsoft.com/en-us/azure/aks/operator-best-practices-cluster-security?tabs=azure-cli) article.
 
 
 
@@ -18,7 +18,7 @@ This repo will show you the basics of deploying containerized applications to AK
 
 - or you can run it locally on a Linux environment. In this case you need:
   
-  - [Azure CLI]([How to install the Azure CLI | Microsoft Docs](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) v2.33.0 or later
+  - [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) v2.33.0 or later
 
 
 
@@ -37,7 +37,7 @@ cd aks-playground
 ./deployment/aks/deploy.sh
 ```
 
-3. Once the deployment script has completed, it will print the endpoint to test each application that has been deployed in the cluster. It will look like the output below:
+3. Once the deployment script has completed, it will print the endpoint to test each application that has been deployed in the cluster. It will look like the output below. Navigate to the different endpoints, explore the App Gateway and ingress controller configurations.
 
 ```textile
 http://aks-apps-123456.eastus.cloudapp.azure.com/carapi/cars
