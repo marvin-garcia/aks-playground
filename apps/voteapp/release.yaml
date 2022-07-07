@@ -24,8 +24,6 @@ spec:
       repository: marvingarcia/voteapp
       tag: "2207072102"
     env:
-    - name: FLASK_APP
-      value: main.py
     - name: REDIS
       value: redis-master.redis.svc.cluster.local
     - name: REDIS_PORT
