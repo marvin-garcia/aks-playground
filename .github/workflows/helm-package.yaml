@@ -26,8 +26,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout GitHub Action
-      uses: actions/checkout@mainwith:
-        branch: ${{ github.ref }}
+      uses: actions/checkout@main
+        with:
+          branch: ${{ github.ref }}
 
     - name: Package chart
       run: |
