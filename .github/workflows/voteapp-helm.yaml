@@ -11,6 +11,7 @@ on:
 env:
   # REPO_URL: 'https://marvin-garcia.github.io/aks-playground/'
   REPO_URL: 'https://raw.githubusercontent.com/marvin-garcia/aks-playground/'
+  REPO_BRANCH: ${{ github.ref_name }}
   PACKAGE_PATH: 'VoteApp/Helm/'
   CHART_PATH: 'VoteApp/Helm/voteapp/'
   GH_USERNAME: 'marvingarcia'
@@ -21,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - id: repo_url
-        run: echo "::set-output name=value::${{ env.REPO_URL }}${{ env.GITHUB_REF_NAME }}"
+        run: echo "::set-output name=value::${{ env.REPO_URL }}${{ env.REPO_BRANCH }}"
       - id: package_path
         run: echo "::set-output name=value::${{ env.PACKAGE_PATH }}"
       - id: chart_path
