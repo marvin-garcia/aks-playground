@@ -36,9 +36,10 @@ try:
                         port=redis_port,
                         password=os.environ['REDIS_PWD'])
     else:
-        r = redis.Redis(redis_server)
+        r = redis.Redis(redis_server, port=redis_port)
     r.ping()
-except redis.ConnectionError:
+except redis.ConnectionError as e:
+    print(e)
     exit('Failed to connect to Redis, terminating.')
 
 # Change title to host name to demo NLB
