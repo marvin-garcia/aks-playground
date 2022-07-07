@@ -172,6 +172,8 @@ EOF
       --kustomization name=apps path=./apps prune=true \
       --namespace cluster-config \
       --scope cluster \
+      --interval 3 \
+      --timeout 3 \
       -o none
 
     if [[ $? -gt 0 ]]
