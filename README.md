@@ -1,19 +1,11 @@
 # aks-playground
-Test repo to practice and learn about deploying applications to Kubernetes on Azure.
+
+This repository is a safe place to practice and learn about deploying applications to Kubernetes on Azure.
 
 ## Getting Started with Managed Clusters (AKS)
 
-1. Clone the repo:
-
-    ```
-    git clone https://github.com/marvin-garcia/aks-playground.git
-    ```
-2. Run the deployment script:
-    ```
-    cd aks-playground
-    ./deployment/aks/deploy.sh
-    ```
+ Follow these [steps](deployment/aks/README.md) if you want to learn how to create and deploy containerized apps to Kubernetes on Azure AKS using Helm Charts.
 
 ## Getting started with Arc-Enabled Kubernetes Clusters
 
-Coming soon...
+Follow these [steps](deployment/azure-arc/README.md) if you want to learn how to manage and deploy containerized apps at scale to multiple Kubernetes clusters using Azure Arc for Kubernetes and GitOps.
