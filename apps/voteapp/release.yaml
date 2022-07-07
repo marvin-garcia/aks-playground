@@ -22,7 +22,8 @@ spec:
   values:
     image:
       repository: marvingarcia/voteapp
-      tag: "2207072102"
+      # tag: "2207072102"
+      tag: "2207072211"
     env:
     - name: REDIS
       value: redis-master.redis.svc.cluster.local
