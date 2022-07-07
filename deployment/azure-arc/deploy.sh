@@ -131,13 +131,13 @@ EOF
     az k8s-configuration flux create \
       -g $resourceGroupName \
       -c $vmName \
-      -n sources \
+      -n infra \
       -t connectedClusters \
       --namespace cluster-config \
       --scope cluster \
       -u $repoUrl \
       --branch $repoBranch \
-      --kustomization name=infra path=./infrastructure/sources prune=true \
+      --kustomization name=infra path=./infrastructure prune=true \
       -o none
 
     if [[ $? -gt 0 ]]
@@ -148,7 +148,7 @@ EOF
     az k8s-configuration flux create \
       -g $resourceGroupName \
       -c $vmName \
-      -n cluster-config \
+      -n nginx \
       -t connectedClusters \
       -u $repoUrl \
       --branch $repoBranch \
