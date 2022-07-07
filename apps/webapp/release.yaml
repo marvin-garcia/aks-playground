@@ -21,7 +21,8 @@ spec:
       retries: 3
   values:
     image:
-      tag: "2207061318"
+      # tag: "2207061318"
+      tag: "2207061349"
     ingress:
       enabled: true
       className: nginx
