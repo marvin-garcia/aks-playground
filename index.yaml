@@ -11,4 +11,15 @@ entries:
     urls:
     - https://marvin-garcia.github.io/aks-playground/CarApi/Helm/carapi-1.0.0.tgz
     version: 1.0.0
-generated: "2022-07-06T18:08:07.663430524Z"
+  voteapp:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2022-07-07T17:09:42.025078385Z"
+    description: A Helm chart for Kubernetes
+    digest: 63162ebbf1e42245837e02c6b920efd02ac8300d2357439e3066c6217ad9691d
+    name: voteapp
+    type: application
+    urls:
+    - https://marvin-garcia.github.io/aks-playground/VoteApp/Helm/voteapp-0.1.0.tgz
+    version: 0.1.0
+generated: "2022-07-07T17:09:42.024459476Z"
