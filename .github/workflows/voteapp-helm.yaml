@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - id: repo_url
-        run: echo "::set-output name=value::${{ env.REPO_URL }}${{ env.REPO_BRANCH }}"
+        run: echo "::set-output name=value::${{ env.REPO_URL }}${{ env.REPO_BRANCH }}/"
       - id: package_path
         run: echo "::set-output name=value::${{ env.PACKAGE_PATH }}"
       - id: chart_path
