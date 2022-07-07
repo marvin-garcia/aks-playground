@@ -12,7 +12,9 @@ jobs:
   call-helm-package:
     uses: marvin-garcia/aks-playground/.github/workflows/helm-package.yaml@main
     with:
-      repo_url: 'https://marvin-garcia.github.io/aks-playground/'
+      # repo_url: 'https://marvin-garcia.github.io/aks-playground/'
+      repo_url: 'https://raw.githubusercontent.com/marvin-garcia/aks-playground/'
+      repo_branch: ${{ env.GITHUB_REF_NAME }}
       package_path: 'VoteApp/Helm/'
       chart_path: 'VoteApp/Helm/voteapp/'
       gh_username: marvingarcia
