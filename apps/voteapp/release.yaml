@@ -22,7 +22,7 @@ spec:
   values:
     image:
       repository: marvingarcia/voteapp
-      tag: "2207071135"
+      tag: "2207072102"
     env:
     - name: FLASK_APP
       value: main.py
