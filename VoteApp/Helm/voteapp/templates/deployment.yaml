@@ -35,7 +35,7 @@ spec:
           imagePullPolicy: {{ .Values.frontend.image.pullPolicy }}
           {{- with .Values.frontend.ports }}
           ports:
-            {{- toYaml . | nintend 10 }}
+            {{- toYaml . | nindent 10 }}
           {{- end }}
           livenessProbe:
             httpGet:
