@@ -14,6 +14,7 @@ spec:
         kind: HelmRepository
         name: voteapp
         namespace: cluster-config
+      version: ">=1.0.1"
   interval: 5m
   install:
     remediation:
