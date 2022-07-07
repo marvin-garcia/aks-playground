@@ -1,5 +1,7 @@
 # Default values
 # https://github.com/bitnami/charts/blob/master/bitnami/redis/values.yaml
+replica:
+  replicaCount: 1
 usePassword: false
 cluster:
   enabled: false
