@@ -60,15 +60,4 @@ entries:
     urls:
     - https://marvin-garcia.github.io/aks-playground/infrastructure/ingress-nginx/ingress-nginx-4.0.17.tgz
     version: 4.0.17
-  voteapp:
-  - apiVersion: v2
-    appVersion: 1.16.0
-    created: "2022-07-07T19:00:46.614783587Z"
-    description: A Helm chart for Kubernetes
-    digest: 06a3f4d5c689491812cfcd76ce97755b56d83b1fcd83a68a9af81894b879df57
-    name: voteapp
-    type: application
-    urls:
-    - https://raw.githubusercontent.com/marvin-garcia/aks-playground/voteapp/VoteApp/Helm/voteapp-0.1.0.tgz
-    version: 0.1.0
 generated: "2022-07-07T19:00:46.614095782Z"
