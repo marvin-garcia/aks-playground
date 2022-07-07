@@ -12,7 +12,6 @@ echo -e "\n$(tput setaf 2)How many Rancher k3s cluster VMs do you want to create
 read vmCount
 
 unique=$(echo $RANDOM | md5sum | head -c 8)
-resourceGroupName="arc-k8s-$unique"
 vmNamePrefix="k3s-$unique"
 workspaceName="workspace-$unique"
 addressPrefix="172.16.0.0/16"
@@ -27,6 +26,7 @@ tenantId=$(echo $account | awk '{print $1;}')
 subscriptionId=$(echo $account | awk '{print $2;}')
 
 # Create resource group
+resourceGroupName="arc-k8s-$repoBranch-$unique"
 az group create \
     -n $resourceGroupName \
     -l $location \
@@ -183,7 +183,7 @@ done
 echo -e "\n$(tput setaf 2)Deployment finished successfully$(tput setaf 7)"
 echo -e "$(tput setaf 2)Resource Group name: $resourceGroupName$(tput setaf 7)"
 
-echo -e "$(tput setaf 3)\nCluster(s) public endpoints: $(echo $output | jq -r ".arcBox.value[].publicIpAddress")$(tput setaf 7)"
+echo -e "$(tput setaf 2)\nCluster(s) public endpoints:$(tput setaf 7)"
 for (( c=0; c<$vmCount; c++))
 do
     vm=$(echo $output | jq -r ".arcBox.value[$c]")
