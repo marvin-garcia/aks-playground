@@ -41,10 +41,10 @@ entries:
       artifacthub.io/prerelease: "false"
     apiVersion: v2
     appVersion: 1.1.1
-    created: "2022-07-06T18:18:50.654310104Z"
+    created: "2022-07-07T17:19:10.290240803Z"
     description: Ingress controller for Kubernetes using NGINX as a reverse proxy
       and load balancer
-    digest: 7589762f9948796f8ef31b09ac1d3d8bc2b5b4e3325dece7ee18c52f471dad34
+    digest: b0d3f2441f64f3472364a229a15518eb4dca95b82b47eabba2652462bd631d18
     home: https://github.com/kubernetes/ingress-nginx
     icon: https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Nginx_logo.svg/500px-Nginx_logo.svg.png
     keywords:
@@ -71,4 +71,4 @@ entries:
     urls:
     - https://marvin-garcia.github.io/aks-playground/VoteApp/Helm/voteapp-0.1.0.tgz
     version: 0.1.0
-generated: "2022-07-07T17:09:42.024459476Z"
+generated: "2022-07-07T17:19:10.285842628Z"
