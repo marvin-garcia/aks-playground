@@ -21,15 +21,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - id: repo_url
-        run: run: echo "::set-output name=value::${{ env.REPO_URL }}${{ env.GITHUB_REF_NAME }}"
+        run: echo "::set-output name=value::${{ env.REPO_URL }}${{ env.GITHUB_REF_NAME }}"
       - id: package_path
-        run: run: echo "::set-output name=value::${{ env.PACKAGE_PATH }}"
+        run: echo "::set-output name=value::${{ env.PACKAGE_PATH }}"
       - id: chart_path
-        run: run: echo "::set-output name=value::${{ env.CHART_PATH }}"
+        run: echo "::set-output name=value::${{ env.CHART_PATH }}"
       - id: github_username
-        run: run: echo "::set-output name=value::${{ env.GH_USERNAME }}"
+        run: echo "::set-output name=value::${{ env.GH_USERNAME }}"
       - id: github_email
-        run: run: echo "::set-output name=value::${{ env.GH_EMAIL }}"
+        run: echo "::set-output name=value::${{ env.GH_EMAIL }}"
     outputs:
       repo_url: ${{ steps.repo_url.outputs.value }}
       package_path: ${{ steps.package_path.outputs.value }}
