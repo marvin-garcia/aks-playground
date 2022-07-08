@@ -14,11 +14,11 @@ Azure Arc-enabled Kubernetes supports industry-standard SSL to secure data in tr
 
 Managing infrastructure at scale has always been a challenge, specially when resources are spread geographically with different and unique environment constraints. [Azure Arc](https://docs.microsoft.com/en-us/azure/azure-arc/overview) helps with the visibility and governance of servers, databases and Kubernetes clusters. They appear in the Azure portal, collect metrics through Azure Monitor and are governed by Azure Policies, as if they were just another Azure resource.
 
-Traditionally, CI/CD practices for containerized apps and microservices utilize a push philosophy: whenever there is a change in one of your applications, a new Docker image is built and pushed to a container registry, and the new image version is then pushed to Kubernetes either via manifests or charts like Helm. This model becomes too rigid when one is supposed to deploy the same application at scale, and that is what the GitOps paradigm aims to solve: GitOps treats each software or infrastructure component as one or more files in a version control system (Git, Bucket), with an automated process to syncrhonize state between the version control and the runtime environment. This is a radical change because it allows IT teams to use infrastructure-as-code (IaC) with the same version control processes that developers have used for decades, adding consistency and standardization to infrastructure management at scale. Since Kubernetes provide the concept of immutability and resource definition in a declarative way, it is much easier to put measures to prevent configuration drifts compared to traditional VM-based deployments. Tools like [Flux](https://fluxcd.io/docs/) and [Argo CD](https://argo-cd.readthedocs.io/en/stable/) run on this principle, establishing a single source of truth (a version control system) for all application and infrastructure deployments. Additionally, they implement a pull method (as opposed to pushing a manifest or charts to a cluster), making it much easier to target multiple clusters regardless of their physical locations, just by connecting them to the version control system and pushing the resources declaration to it.
+Traditionally, CI/CD practices for containerized apps and microservices utilize a push philosophy: whenever there is a change in one of your applications, a new Docker image is built and pushed to a container registry, and the new image version is then pushed to Kubernetes either via manifests or charts like Helm. This model becomes too rigid when one is supposed to deploy the same application at scale, and that is what the GitOps paradigm aims to solve: GitOps treats each software or infrastructure component as one or more files in a version control system (Git, Bucket), with an automated process to syncrhonize state between the version control and the runtime environment. This is a radical change because it allows IT teams to use infrastructure-as-code (IaC) with the same version control processes that developers have used for decades, adding consistency and standardization to infrastructure management at scale. Since Kubernetes provide the concept of immutability and resource definition in a declarative way, it is much easier to put measures to prevent configuration drifts compared to traditional VM-based deployments. Tools like [Flux](https://fluxcd.io/docs/) and [Argo CD](https://argo-cd.readthedocs.io/en/stable/) run on this principle, establishing a single source of truth (a version control system) for all application and infrastructure deployments. Additionally, they implement a pull method (as opposed to pushing a manifest or charts to a cluster), making it much easier to target multiple clusters regardless of their physical locations.
 
 This repo will help you understand how you can deploy applications at scale using Azure Arc-enabled Kubernetes and Flux v2. The following steps describe what is done by the deployment wizard:
 
-1. It creates one or more Ubuntu Azure Virtual Machines in the same network address space
+1. It creates one or more Ubuntu Azure Virtual Machines
 
 2. Installs the lightweight version of [Rancher K3s](https://k3s.io/) on each VM
 
@@ -26,9 +26,9 @@ This repo will help you understand how you can deploy applications at scale usin
 
 4. Installs the following Microsoft Kubernetes extensions on each cluster: `Flux`, `Policy Insights`, `Azure Defender for Kubernetes`, `Azure Monitor for Containers`
 
-5. Enables GitOps on each cluster
+5. Installs the `Microsoft.flux` extension on each cluster
 
-6. Creates a [Flux configuration](https://docs.microsoft.com/en-us/cli/azure/k8s-configuration/flux?view=azure-cli-latest) to manage all the Helm release sources (in the form of `HelmRepository` objects) that will be needed
+6. Creates a [Flux configuration](https://docs.microsoft.com/en-us/cli/azure/k8s-configuration/flux?view=azure-cli-latest) to manage all the required Helm release sources (in the form of `HelmRepository` objects)
 
 7. Creates a [Flux configuration](https://docs.microsoft.com/en-us/cli/azure/k8s-configuration/flux?view=azure-cli-latest) to manage NGINX Ingress controller as part of the clusters' infrastructure config
 
@@ -46,7 +46,7 @@ the image below illustrates the resources that are deployed and how they are con
 
 ### Flux Configurations
 
-Probably the most important part of GitOps, is having a clear structure and separation of what will be deployed to the clusters and how they have dependencies on each other. The image below shows the repository's folder structure that is relevant to Flux and what each component represents.
+Probably the most important part of GitOps, is having a clear structure and separation of what will be deployed to the clusters and how they have dependencies on each other. The snippet below shows the repository folders that are relevant to the Flux configuration:
 
 ```textile
 aks-playground/
@@ -105,7 +105,7 @@ resources:
 
 
 
-The folder `sources` contains `HelmRepository` objects that will be used in the solution. [HelmRepository](https://fluxcd.io/docs/components/source/helmrepositories/) objects specify the location of a [Helm Chart](https://helm.sh/). Those charts can be located at an OCI Helm repository (like [like Azure Container Registry](https://docs.microsoft.com/en-us/azure/container-registry/container-registry-image-formats#oci-images)) or an HTTP/HTTPS repository like Git (follow this great [article](https://medium.com/@mattiaperi/create-a-public-helm-chart-repository-with-github-pages-49b180dbb417) to create a public Helm chart repository with GitHub Pages and look at the [helm-package.yaml](../../.github/workflows/helm-package.yaml) workflow to learn how to package and index your Helm charts in GitHub).
+The folder `sources` contains [HelmRepository](https://fluxcd.io/docs/components/source/helmrepositories/) objects that will be used in the solution. The `HelmRepository` resource specifies the location of a [Helm Chart](https://helm.sh/). Those charts can be located at an OCI Helm repository (like [like Azure Container Registry](https://docs.microsoft.com/en-us/azure/container-registry/container-registry-image-formats#oci-images)) or an HTTP/HTTPS repository like Git (follow this great [article](https://medium.com/@mattiaperi/create-a-public-helm-chart-repository-with-github-pages-49b180dbb417) to create a public Helm chart repository with GitHub Pages and look at the [helm-package.yaml](../../.github/workflows/helm-package.yaml) workflow to learn how to package and index your Helm charts in GitHub).
 
 > **NOTE:** For secret repositories, your `HelmRepository` you must provide a [Secret reference](https://fluxcd.io/docs/components/source/helmrepositories/#secret-reference).
 
@@ -117,7 +117,7 @@ The folders `app/voteapp`, `infrastructure/ingress-nginx` and `infrastructure/re
 
 - [HelmRelease](https://fluxcd.io/docs/components/helm/helmreleases/) objects define a resource that will be reconciliated via Helm actions such as install, upgrade, test, uninstall and rollback. The `.spec` object expects almost the same parameters as the `helm install/upgrade` commands: the target namespace to install the release, the repo location (in this case, referencing a `HelmRepository` object), and override values for the release if needed.
 
-- [Kustomization](https://kubectl.docs.kubernetes.io/references/kustomize/glossary/#kustomization) objects specify all the resources that will be used by Kustomize. Below is the content of `infrastructure/ingress-nginx/kustomization.yaml`, and despite having other files in the same folder, Kustomize will ignore them until they are added as a Kustomization resource.
+- [Kustomization](https://kubectl.docs.kubernetes.io/references/kustomize/glossary/#kustomization) objects specify all the resources that will be used by Kustomize. Below is the content of `infrastructure/ingress-nginx/kustomization.yaml`, and despite having other files in the same folder, Kustomize will ignore them unless they are added as a Kustomization resource.
 
 ```yaml
 apiVersion: kustomize.config.k8s.io/v1beta1
@@ -128,7 +128,7 @@ resources:
  - release.yaml
 ```
 
-> **IMPORTANT:** `ingress-nginx` and `redis` folders show different approaches to reconciliate their configurations. `redis` stores release values in a [ConfigMaps](https://kubernetes.io/docs/concepts/configuration/configmap/) object, while `ingress-nginx` only provides a subset of the values needed for the release. The next section explains how the configuration for each cluster is patched with the one declared in `ingress-nginx` to create unique releases.
+> **IMPORTANT:** `ingress-nginx` and `redis` folders show different approaches to reconciliate their configurations. `redis` stores release values in a [ConfigMaps](https://kubernetes.io/docs/concepts/configuration/configmap/) object, while the installation of `ingress-nginx` is patched with unique information for each cluster. The next section explains how this patching is made to obtain unique Helm releases.
 
 
 
@@ -142,17 +142,18 @@ resources:
 
 Since the ingress controller requires an IP address to listen to (passed through `controller.service.externalIPs[]`), every cluster in this sandbox deployment will require their own `HelmRelease` definition with their private IP Address.
 
->  **IMPORTANT:** This is a very common scenario where certain configurations require unique parameters. The way the GitOps paradigm solves it is by separating the application code and release configurations in different repositories, and pushing the infrastructure and application releases to the release configuration repository as part of their CI/CD pipelines triggered by changes in the application code. This also creates security boundaries by not letting developer and IT teams tamper with the final state of the releases; they must commit their changes via their version control system which will be submitted for review and approved via pull requests, and the CI part of CI/CD will have the necessary permissions to commit changes to the release configuration repository. For simplicity's sake, this project "isolates" the release configuration for ingress controller by creating a folder for each k3s cluster and customizing its `values.yaml` file with the VM's private IP address.
+>  **IMPORTANT:** This is a very common scenario where certain configurations require unique parameters. The way the GitOps paradigm solves it is by separating the application code and release configurations in different repositories, and pushing infrastructure and application releases to the release configuration repository as part of their CI/CD pipelines triggered by changes in the application code. This also creates security boundaries by not letting developer and IT teams tamper with the final state of the releases; they must commit their changes via their version control system which will be submitted for review and approved via pull requests, and the CI part of CI/CD will have the necessary permissions to commit changes to the release configuration repository. For simplicity's sake, this project "isolates" the release configuration for ingress controller by creating a folder for each k3s cluster and customizing its `values.yaml` file with the VM's private IP address.
 
 
 
 #### Creating Flux Configuration in a cluster
 
-Azure Arc for Kubernetes allows us to install extensions in the cluster so it can understand new resource types and apply their configurations. This repository install the `Microsoft.Flux` extension on each cluster and then creates two Flux configurations using the [az k8s-configuration flux](https://docs.microsoft.com/en-us/cli/azure/k8s-configuration/flux?view=azure-cli-latest) CLI extension. Let's discuss both configurations:
+Azure Arc for Kubernetes allows us to install extensions in the cluster so it can understand new resource types and apply their configurations. This repository install the `Microsoft.Flux` extension on each cluster and then creates three Flux configurations using the [az k8s-configuration flux](https://docs.microsoft.com/en-us/cli/azure/k8s-configuration/flux?view=azure-cli-latest) CLI extension. Let's discuss these configurations:
 
-- NGINX: It is responsible for monitoring the Kustomize configuration that install NGINX Ingress controller for each cluster, located in the path `infrastructure/<cluster_name>` of your repository branch. As discussed previously, each cluster's ingress release requires a different IP address, resulting in separate folders for each cluster.
+- Sources: It is responsible for monitoring the Kustomize configuration that contains all the `HelmRepository` objects that will be needed by `redis`, `ingress-nginx` and `voteapp`.
+- NGINX: It is responsible for monitoring the Kustomize configuration that installs NGINX Ingress controller, located in the path `infrastructure/<cluster_name>` of your repository branch. As discussed previously, each cluster's ingress release requires a different IP address, resulting in separate folders for each cluster.
 
-- Apps: It is responsible for monitoring the Kustomize configuration declared in `apps/kustomize.yaml`, which in our case is only the `voteapp` application. But since the `voteapp` application has a dependency on a Redis cache, the Flux configuration implements two different kustomization objects. Below is a sample command to create the **apps** Flux configuration, notice how the `apps` kustomization has a dependency on `redis`, which determines the order in which Flux will create and update them.
+- Apps: It is responsible for monitoring the Kustomize configuration declared in `apps/kustomize.yaml`, which in our case only includes the `voteapp` application. But since the `voteapp` application has a dependency on a Redis cache, the Flux configuration implements two different kustomization objects. Below is a sample command to create the **apps** Flux configuration, notice how the `apps` kustomization has a dependency on `redis`, which determines the order in which Flux will create and update them.
 
 ```bash
 az k8s-configuration flux create \
@@ -224,7 +225,7 @@ Cluster(s) public endpoints:
 - http://k3s-a24e4574-3.eastus2.cloudapp.azure.com/
 ```
 
-6. On your browser, navigate to any of the clusters' endpoints. You should see the main page of the Vote app.
+6. On your browser, navigate to any of the clusters' endpoints. You should see the main page of the Voting app.
 
 7. Go back to the Azure Cloud Shell or your local Linux console and open the [voteapp release](../../apps/voteapp/release.yaml) file. Change the value of the property `values.image.tag` to `2207072232`. Commit and push your changes.
 
@@ -246,4 +247,4 @@ git push
 
 You can use the [Azure Bastion](https://docs.microsoft.com/en-us/azure/bastion/bastion-overview) in your resource group to connect via SSH to the virtual machines running k3s. Once logged in, you can use `kubectl` and `helm` to explore all the Helm releases and Kubernetes resources that were created by Flux. If you want to see this information in the Azure Portal, follow [these instructions](https://docs.microsoft.com/en-us/azure/azure-arc/kubernetes/cluster-connect?tabs=azure-cli#service-account-token-authentication-option) to grant access to your clusters.
 
-> **TIP:** Use your private SSH key located at `~/.ssh/id_rsa` to connect to the virtual machines through Azure Bastion.
+> **TIP:** The Azure template sets the virtual machine's username to **arcuser**. Use your private SSH key located at `~/.ssh/id_rsa` to connect to the virtual machines through Azure Bastion.
