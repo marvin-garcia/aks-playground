@@ -2,7 +2,7 @@ name: Vote App Docker build
 on:
   push:
     paths:
-    - 'voteapp/voteapp/**'
+    - 'VoteApp/voteapp/**'
     branches:
     - main
   workflow_dispatch:
