@@ -18,12 +18,13 @@ addressPrefix="172.16.0.0/16"
 arcSubnetAddressPrefix="172.16.1.0/24"
 bastionSubnetAddressPrefix="172.16.3.64/26"
 
-repoUrl="https://github.com/marvin-garcia/aks-playground"
+remote=$(git config --get remote.origin.url)
+repoUrl=$(echo ${remote//".git"})
 repoBranch=$(git rev-parse --abbrev-ref HEAD)
 
-account=$(az account show -o tsv --query "[tenantId, id]")
-tenantId=$(echo $account | awk '{print $1;}')
-subscriptionId=$(echo $account | awk '{print $2;}')
+account=$(az account show)
+tenantId=$(echo $account | jq -r ".tenantId")
+subscriptionId=$(echo $account | jq -r ".id")
 
 # Create resource group
 resourceGroupName="arc-k8s-$repoBranch-$unique"
@@ -41,7 +42,7 @@ spnClientId=$(echo $spn | awk '{print $1;}')
 spnPassword=$(echo $spn | awk '{print $2;}')
 
 # Deploy resources
-deploymentName="arc-k8s-$unique"
+deploymentName="arc-k8s-$repoBranch-$unique"
 echo -e "\n$(tput setaf 2)Creating deployment $deploymentName$(tput setaf 7)"
 
 output=$(az deployment group create \
@@ -76,12 +77,13 @@ do
 
     rm -rf "./infrastructure/$vmName"
 
-    echo -e "\n$(tput setaf 3)Creating cluster infrastructure folder for '$vmName'\n$(tput setaf 7)"
+    echo -e "\n$(tput setaf 2)Creating cluster infrastructure folder for '$vmName'\n$(tput setaf 7)"
 
     mkdir -p "./infrastructure/$vmName"
     
-    echo -e "\n$(tput setaf 3)Writing cluster's kustomization file for '$vmName'\n$(tput setaf 7)"
+    echo -e "\n$(tput setaf 2)Writing cluster's kustomization file for '$vmName'\n$(tput setaf 7)"
     
+    ## Write cluster's custom ingress release
     cat << EOF > "./infrastructure/$vmName/kustomization.yaml"
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
@@ -91,7 +93,7 @@ patchesStrategicMerge:
   - values.yaml
 EOF
 
-    echo -e "\n$(tput setaf 3)Writing cluster's values file for '$vmName'\n$(tput setaf 7)"
+    echo -e "\n$(tput setaf 2)Writing cluster's values file for '$vmName'\n$(tput setaf 7)"
     
     cat << EOF > "./infrastructure/$vmName/values.yaml"
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
@@ -115,7 +117,7 @@ spec:
         - '$ipAddress'
 EOF
 
-    echo -e "\n$(tput setaf 3)Pushing infrastructure files to repo for '$vmName'\n$(tput setaf 7)"
+    echo -e "\n$(tput setaf 2)Pushing infrastructure files to repo for '$vmName'\n$(tput setaf 7)"
 
     git add "./infrastructure/$vmName"
     git commit -m "Added infrastructure files for '$vmName'"
@@ -128,23 +130,7 @@ EOF
 
     echo -e "\n$(tput setaf 2)Starting GitOps configuration for cluster '$vmName'$(tput setaf 7)"
 
-    az k8s-configuration flux create \
-      -g $resourceGroupName \
-      -c $vmName \
-      -n infra \
-      -t connectedClusters \
-      --namespace cluster-config \
-      --scope cluster \
-      -u $repoUrl \
-      --branch $repoBranch \
-      --kustomization name=infra path=./infrastructure prune=true \
-      -o none
-
-    if [[ $? -gt 0 ]]
-    then
-        exit 1
-    fi
-
+    ## Create cluster's Flux configurations
     az k8s-configuration flux create \
       -g $resourceGroupName \
       -c $vmName \
@@ -165,11 +151,12 @@ EOF
     az k8s-configuration flux create \
       -g $resourceGroupName \
       -c $vmName \
-      -n apps-config \
+      -n apps \
       -t connectedClusters \
       -u $repoUrl \
       --branch $repoBranch \
-      --kustomization name=apps path=./apps prune=true sync_interval=3m retry_interval=3m timeout=3m \
+      --kustomization name=redis path=./infrastructure/redis prune=true \
+      --kustomization name=apps path=./apps prune=true dependsOn=["redis"] \
       --namespace cluster-config \
       --scope cluster \
       --interval 3m \
