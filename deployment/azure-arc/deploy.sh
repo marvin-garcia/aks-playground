@@ -172,8 +172,8 @@ EOF
       -t connectedClusters \
       -u $repoUrl \
       --branch $repoBranch \
-      --kustomization name=redis path=./infrastructure/redis prune=true \
-      --kustomization name=apps path=./apps prune=true dependsOn=["redis"] \
+      --kustomization name=redis path=./infrastructure/redis prune=true  \
+      --kustomization name=apps path=./apps prune=true dependsOn=["redis"] sync_interval=3m retry_interval=3m timeout=3m \
       --namespace cluster-config \
       --scope cluster \
       --interval 3m \
