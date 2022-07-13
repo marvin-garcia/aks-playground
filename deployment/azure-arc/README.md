@@ -205,7 +205,7 @@ git clone https://github.com/<your-github-org-name>/aks-playground.git
 
 ```bash
 git checkout -b <your-new-branch-name>
-git push
+git push --set-upstream origin <your-new-branch-name>
 ```
 
 4. Run the Azure Arc deployment script and follow the wizard instructions:
