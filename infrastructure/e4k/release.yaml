@@ -8,7 +8,7 @@ spec:
   releaseName: e4k
   chart:
     spec:
-      chart: e4k
+      chart: az-e4k
       sourceRef:
         kind: HelmRepository
         name: e4k

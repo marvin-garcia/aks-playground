@@ -6,4 +6,4 @@ metadata:
 spec:
   type: "oci"
   interval: 30m
-  url: oci://edgecharts.azurecr.io/helm/az-e4k
+  url: oci://edgecharts.azurecr.io/helm/
