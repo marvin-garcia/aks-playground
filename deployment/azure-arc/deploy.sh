@@ -164,7 +164,7 @@ EOF
     then
         exit 1
     fi
-
+    
     az k8s-configuration flux create \
       -g $resourceGroupName \
       -c $vmName \
@@ -176,12 +176,12 @@ EOF
       --namespace cluster-config \
       --scope cluster \
       -o none
-
+      
     if [[ $? -gt 0 ]]
     then
-        exit 1
+      exit 1
     fi
-
+    
     az k8s-configuration flux create \
       -g $resourceGroupName \
       -c $vmName \
