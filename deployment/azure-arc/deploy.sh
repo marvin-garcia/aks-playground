@@ -168,6 +168,23 @@ EOF
     az k8s-configuration flux create \
       -g $resourceGroupName \
       -c $vmName \
+      -n mqtt-broker \
+      -t connectedClusters \
+      -u $repoUrl \
+      --branch $repoBranch \
+      --kustomization name=infra path=./infrastructure/e4k prune=true \
+      --namespace cluster-config \
+      --scope cluster \
+      -o none
+
+    if [[ $? -gt 0 ]]
+    then
+        exit 1
+    fi
+
+    az k8s-configuration flux create \
+      -g $resourceGroupName \
+      -c $vmName \
       -n apps \
       -t connectedClusters \
       -u $repoUrl \

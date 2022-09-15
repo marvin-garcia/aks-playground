@@ -1,0 +1,9 @@
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: e4k
+  namespace: cluster-config
+spec:
+  type: "oci"
+  interval: 30m
+  url: oci://edgecharts.azurecr.io/helm/az-e4k
