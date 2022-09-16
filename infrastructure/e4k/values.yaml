@@ -21,3 +21,23 @@ e4kdmqtt:
         [client2.attributes]
         floor = "floor1"
         site = "site2"
+
+connector:
+  enabled: true
+
+e4kconnector:
+  kafka:
+    endpoint: eh-ec2db7b3.servicebus.windows.net:9093
+    group_id_prefix: e4kconnector
+    auto_commit_interval_ms: 5000
+    auth:
+      type: plain
+      username: $ConnectionString
+      password: Endpoint=sb://eh-ec2db7b3.servicebus.windows.net/;SharedAccessKeyName=send;SharedAccessKey=tSLn3vyGUPACiQ1Fk6bbVHY8RN/IFOAb5QBLZKkJH6c=
+  topicMap:
+    configYaml:
+      route:
+        # A route defined to pull from mqtt topic "topic1" and push to Kafka topic "e4k-ingress" (default - partition 0 only)
+        - kafka: e4k-ingress
+          mqtt: topic1
+          sink_to: kafka # key that dictates direction
