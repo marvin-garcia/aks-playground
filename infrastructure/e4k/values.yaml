@@ -26,7 +26,7 @@ e4kconnector:
     auth:
       type: plain
       username: $ConnectionString
-      password: Endpoint=sb://eh-ec2db7b3.servicebus.windows.net/;SharedAccessKeyName=send;SharedAccessKey=tSLn3vyGUPACiQ1Fk6bbVHY8RN/IFOAb5QBLZKkJH6c=
+      password: Endpoint=sb://eh-ec2db7b3.servicebus.windows.net/;SharedAccessKeyName=send;SharedAccessKey=trfPDAaxO4cLXS7IUzocHrA/nivilsV90wGeBaOX5do=;EntityPath=e4k-ingress
   topicMap:
     configYaml:
       route:
