@@ -15,22 +15,27 @@ e4kdmqtt:
         floor = "floor1"
         site = "site1"
 
-connector:
-  enabled: true
+        [client2]
+        password = "$argon2i$v=19$m=16,t=2,p=1$MTIzNDU2Nzg$ZZ/eAcHRleU4ChG0EJ+2Mw"
 
-e4kconnector:
-  kafka:
-    endpoint: eh-ec2db7b3.servicebus.windows.net:9093
-    group_id_prefix: e4kconnector
-    auto_commit_interval_ms: 5000
-    auth:
-      type: plain
-      username: $ConnectionString
-      password: Endpoint=sb://eh-ec2db7b3.servicebus.windows.net/;SharedAccessKeyName=send;SharedAccessKey=trfPDAaxO4cLXS7IUzocHrA/nivilsV90wGeBaOX5do=;EntityPath=e4k-ingress
-  topicMap:
-    configYaml:
-      route:
-        # A route defined to pull from mqtt topic "topic1" and push to Kafka topic "e4k-ingress" (default - partition 0 only)
-        - kafka: e4k-ingress
-          mqtt: topic1
-          sink_to: kafka # key that dictates direction
+        [client2.attributes]
+        floor = "floor2"
+        site = "site1"
+# connector:
+#   enabled: true
+# e4kconnector:
+#   kafka:
+#     endpoint: eh-ec2db7b3.servicebus.windows.net:9093
+#     group_id_prefix: e4kconnector
+#     auto_commit_interval_ms: 5000
+#     auth:
+#       type: plain
+#       username: $ConnectionString
+#       password: Endpoint=sb://eh-ec2db7b3.servicebus.windows.net/;SharedAccessKeyName=send;SharedAccessKey=trfPDAaxO4cLXS7IUzocHrA/nivilsV90wGeBaOX5do=;EntityPath=e4k-ingress
+#   topicMap:
+#     configYaml:
+#       route:
+#         # A route defined to pull from mqtt topic "topic1" and push to Kafka topic "e4k-ingress" (default - partition 0 only)
+#         - kafka: e4k-ingress
+#           mqtt: topic1
+#           sink_to: kafka # key that dictates direction
