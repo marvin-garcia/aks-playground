@@ -91,4 +91,15 @@ entries:
     urls:
     - https://marvin-garcia.github.io/aks-playground/VoteApp/Helm/voteapp-0.1.0.tgz
     version: 0.1.0
+  opc-publisher:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2022-09-21T09:03:11.068600702-04:00"
+    description: A Helm chart for Kubernetes
+    digest: 81db0d7a6682819d7c752cd494745147ed6639cba454096c41f3fb14b57a9dc8
+    name: opc-publisher
+    type: application
+    urls:
+    - https://marvin-garcia.github.io/aks-playground/opc-publisher/Helm/opc-publisher-0.1.0.tgz
+    version: 0.1.0
 generated: "2022-07-07T19:49:41.682195438Z"

@@ -1,0 +1,33 @@
+[
+  {
+    "EndpointUrl": "opc.tcp://aci-contoso-factory-fxnsysq-plc1.eastus.azurecontainer.io:50000",
+    "UseSecurity": false,
+    "OpcNodes": [
+      { "Id": "nsu=http://microsoft.com/Opc/OpcPlc/Boiler;s=Boiler" },
+      { "Id": "nsu=http://microsoft.com/Opc/OpcPlc/;s=StepUp" },
+      { "Id": "nsu=http://microsoft.com/Opc/OpcPlc/;s=AlternatingBoolean" },
+      { "Id": "nsu=http://microsoft.com/Opc/OpcPlc/;s=RandomSignedInt32" },
+      { "Id": "nsu=http://microsoft.com/Opc/OpcPlc/;s=RandomUnsignedInt32" },
+      { "Id": "nsu=http://microsoft.com/Opc/OpcPlc/;s=DipData" },
+      { "Id": "nsu=http://microsoft.com/Opc/OpcPlc/;s=FastUInt1" },
+      { "Id": "nsu=http://microsoft.com/Opc/OpcPlc/;s=FastUInt2" },
+      { "Id": "nsu=http://microsoft.com/Opc/OpcPlc/;s=FastUInt3" },
+      { "Id": "nsu=http://microsoft.com/Opc/OpcPlc/;s=FastUInt4" },
+      { "Id": "nsu=http://microsoft.com/Opc/OpcPlc/;s=FastUInt5" },
+      { "Id": "nsu=http://microsoft.com/Opc/OpcPlc/;s=FastUInt6" },
+      { "Id": "nsu=http://microsoft.com/Opc/OpcPlc/;s=FastUInt7" },
+      { "Id": "nsu=http://microsoft.com/Opc/OpcPlc/;s=FastUInt8" },
+      { "Id": "nsu=http://microsoft.com/Opc/OpcPlc/;s=FastUInt9" },
+      { "Id": "nsu=http://microsoft.com/Opc/OpcPlc/;s=FastUInt10" },
+      { "Id": "nsu=http://microsoft.com/Opc/OpcPlc/;s=BadFastUInt1" },
+      { "Id": "nsu=http://microsoft.com/Opc/OpcPlc/;s=NegativeTrendData" },
+      { "Id": "nsu=http://microsoft.com/Opc/OpcPlc/;s=PositiveTrendData" },
+      { "Id": "nsu=http://microsoft.com/Opc/OpcPlc/;s=SlowUInt1", "OpcPublishingInterval": 10000 },
+      { "Id": "nsu=http://microsoft.com/Opc/OpcPlc/;s=SlowUInt2", "OpcPublishingInterval": 10000 },
+      { "Id": "nsu=http://microsoft.com/Opc/OpcPlc/;s=SlowUInt3", "OpcPublishingInterval": 10000 },
+      { "Id": "nsu=http://microsoft.com/Opc/OpcPlc/;s=SlowUInt4", "OpcPublishingInterval": 10000 },
+      { "Id": "nsu=http://microsoft.com/Opc/OpcPlc/;s=SlowUInt5", "OpcPublishingInterval": 10000 },
+      { "Id": "nsu=http://microsoft.com/Opc/OpcPlc/;s=SpikeData" }
+    ]
+  }
+]
