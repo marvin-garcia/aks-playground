@@ -11,16 +11,8 @@ e4kdmqtt:
         [client1]
         password = "$argon2i$v=19$m=16,t=2,p=1$MTIzNDU2Nzg$ZZ/eAcHRleU4ChG0EJ+2Mw"
 
-        [client1.attributes]
-        floor = "floor1"
-        site = "site1"
-
         [client2]
         password = "$argon2i$v=19$m=16,t=2,p=1$MTIzNDU2Nzg$ZZ/eAcHRleU4ChG0EJ+2Mw"
-
-        [client2.attributes]
-        floor = "floor2"
-        site = "site1"
 # connector:
 #   enabled: true
 # e4kconnector:
