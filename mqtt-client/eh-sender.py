@@ -20,6 +20,8 @@ async def run():
             'clientId': 'client001',
             'command': 'restart',
         }
+
+        print(f'Sending message {json.dumps(payload)}')
         await producer.send_event(EventData(json.dumps(payload)))
 
         time.sleep(interval_sec)
