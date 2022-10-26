@@ -1,0 +1,52 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: opc-publisher
+  namespace: cluster-config
+spec:
+  targetNamespace: opc-publisher
+  releaseName: opc-publisher
+  chart:
+    spec:
+      chart: opc-publisher
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        name: opc-publisher
+        namespace: cluster-config
+      version: ">=0.1.0"
+  interval: 5m
+  install:
+    remediation:
+      retries: 3
+  values:
+    replicaCount: 1
+    image:
+      repository: mcr.microsoft.com/iotedge/opc-publisher
+      pullPolicy: IfNotPresent
+      tag: "2.8"
+    serviceAccount:
+      create: true
+      annotations: {}
+      name: "opc-publisher"
+    podAnnotations: {}
+    podSecurityContext: {}
+    securityContext: {}
+    args:
+      - "--aa"
+      - "--BypassCertVerification=true"
+      - "--tm"
+      - "--pf=/published_nodes.json"
+      - "--dc=HostName=contoso-factory-hub.azure-devices.net;DeviceId=opc-publisher-1;SharedAccessKey=9b14xlVVuNPBhDvSwrPI6Zq6EF+m7ALNN+YJG0TmbQk="
+      - "--iothubprotocol=Mqtt"
+    service:
+      type: ClusterIP
+      port: 9080
+    resources: {}
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
+    autoscaling:
+      enabled: false
+    ingress:
+      enabled: false
