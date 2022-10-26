@@ -9,25 +9,46 @@ e4kdmqtt:
     credentials:
       configToml: |
         [client1]
-        password = "$argon2i$v=19$m=16,t=2,p=1$MTIzNDU2Nzg$ZZ/eAcHRleU4ChG0EJ+2Mw"
+        password = "$pbkdf2-sha512$i=100000,l=64$HqJwOCHweNk1pLryiu3RsA$KVSvxKYcibIG5S5n55RvxKRTdAAfCUtBJoy5IuFzdSZyzkwvUcU+FPawEWFPn+06JyZsndfRTfpiEh+2eSJLkg"
+
+        [client1.attributes]
+        floor = "floor1"
+        site = "site1"
 
         [client2]
-        password = "$argon2i$v=19$m=16,t=2,p=1$MTIzNDU2Nzg$ZZ/eAcHRleU4ChG0EJ+2Mw"
-# connector:
-#   enabled: true
-# e4kconnector:
-#   kafka:
-#     endpoint: eh-ec2db7b3.servicebus.windows.net:9093
-#     group_id_prefix: e4kconnector
-#     auto_commit_interval_ms: 5000
-#     auth:
-#       type: plain
-#       username: $ConnectionString
-#       password: Endpoint=sb://eh-ec2db7b3.servicebus.windows.net/;SharedAccessKeyName=send;SharedAccessKey=trfPDAaxO4cLXS7IUzocHrA/nivilsV90wGeBaOX5do=;EntityPath=e4k-ingress
-#   topicMap:
-#     configYaml:
-#       route:
-#         # A route defined to pull from mqtt topic "topic1" and push to Kafka topic "e4k-ingress" (default - partition 0 only)
-#         - kafka: e4k-ingress
-#           mqtt: topic1
-#           sink_to: kafka # key that dictates direction
+        password = "$pbkdf2-sha512$i=100000,l=64$+H7jXzcEbq2kkyvpxtxePQ$jTzW6fSesiuNRLMIkDDAzBEILk7iyyDZ3rjlEwQap4UJP4TaCR+EXQXNukO7qNJWlPPP8leNnJDCBgX/255Ezw"
+
+        [client2.attributes]
+        floor = "floor2"
+        site = "site2"
+
+connector:
+  enabled: true
+
+diagnostics:
+  enabled: true
+
+e4kconnector:
+  kafka:
+    endpoint: marveventhubs.servicebus.windows.net:9093
+    group_id_prefix: e4kconnector
+    auto_commit_interval_ms: 5000
+    listener:
+      type: ssl
+      sasl:
+        sasl_type: plain
+        secret_name: eventhub-namespace-secret
+    # auth:
+    #   type: k8s_secret_plain
+    #   secret_name: eventhub-secret
+  topicMap:
+    configYaml:
+      route:
+        # A route defined to pull from mqtt topic and push to Kafka topic "edge-to-cloud" (default - partition 0 only)
+        - kafka: edge-to-cloud
+          mqtt: telemetry
+          sink_to: kafka
+        # A route defined to pull from kafka topic "cloud-to-edge" (default - partition 0 only) and push to Mqtt topic
+        - kafka: cloud-to-edge
+          mqtt: commands
+          sink_to: mqtt
