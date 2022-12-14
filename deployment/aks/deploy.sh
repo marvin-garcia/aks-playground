@@ -37,6 +37,8 @@ ingressClassName='ingress-test'
 az group create \
     -n $resourceGroupName \
     -l $location
+# Get Kubernetes version
+aksVersion=$(az aks get-versions -l eastus --query 'orchestrators[0].orchestratorVersion' -o tsv)
 
 # Deploy resources
 deploymentName="aks-deployment-$unique"
@@ -46,6 +48,7 @@ az deployment group create \
     --name $deploymentName \
     --template-file ./deployment/aks/bicep/azuredeploy.bicep \
     --parameters clusterName=$clusterName \
+    --parameters kubernetesVersion=$aksVersion \
     --parameters publicSshKey=@~/.ssh/id_rsa.pub \
     --parameters aksVirtualNetworkName=$aksVnetName \
     --parameters aksVirtualNetworkPrefix=$aksVnetAddressPrefix \
