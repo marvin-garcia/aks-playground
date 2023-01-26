@@ -9,7 +9,7 @@ sudo adduser staginguser --gecos "First Last,RoomNumber,WorkPhone,HomePhone" --d
 sudo echo "staginguser:ArcPassw0rd" | sudo chpasswd
 
 # Injecting environment variables
-echo '#!/bin/bash' >> vars.sh
+echo '#!/bin/bash' > vars.sh
 echo $adminUsername:$1 | awk '{print substr($1,2); }' >> vars.sh
 echo $SPN_CLIENT_ID:$2 | awk '{print substr($1,2); }' >> vars.sh
 echo $SPN_CLIENT_SECRET:$3 | awk '{print substr($1,2); }' >> vars.sh
@@ -19,7 +19,7 @@ echo $location:$6 | awk '{print substr($1,2); }' >> vars.sh
 echo $stagingStorageAccountName:$7 | awk '{print substr($1,2); }' >> vars.sh
 echo $logAnalyticsWorkspace:$8 | awk '{print substr($1,2); }' >> vars.sh
 echo $deployBastion:$9 | awk '{print substr($1,2); }' >> vars.sh
-echo $publicIp:$10 | awk '{print substr($1,2); }' >> vars.sh
+echo $publicIp:${10} | awk '{print substr($1,2); }' >> vars.sh
 sed -i '2s/^/export adminUsername=/' vars.sh
 sed -i '3s/^/export SPN_CLIENT_ID=/' vars.sh
 sed -i '4s/^/export SPN_CLIENT_SECRET=/' vars.sh
@@ -30,7 +30,6 @@ sed -i '8s/^/export stagingStorageAccountName=/' vars.sh
 sed -i '9s/^/export logAnalyticsWorkspace=/' vars.sh
 sed -i '10s/^/export deployBastion=/' vars.sh
 sed -i '11s/^/export publicIp=/' vars.sh
-
 chmod +x vars.sh
 . ./vars.sh
 
@@ -44,9 +43,9 @@ while sleep 1; do sudo -s rsync -a /var/lib/waagent/custom-script/download/0/ins
 # Installing Rancher K3s single master cluster using k3sup
 sudo -u $adminUsername mkdir /home/${adminUsername}/.kube
 curl -sLS https://get.k3sup.dev | sh
-sudo cp k3sup /usr/local/bin/k3sup
+# sudo cp k3sup /usr/local/bin/k3sup
 sudo k3sup install --local --user $adminUsername --context $vmName --ip $publicIp --k3s-extra-args '--disable traefik'
-# sudo k3sup install --local --context $vmName --k3s-extra-args '--no-deploy traefik' --ip
+# sudo k3sup install --local --context $vmName --k3s-extra-args '--no-deploy traefik'
 sudo chmod 644 /etc/rancher/k3s/k3s.yaml
 sudo cp kubeconfig /home/${adminUsername}/.kube/config
 sudo cp kubeconfig /home/${adminUsername}/.kube/config.staging
