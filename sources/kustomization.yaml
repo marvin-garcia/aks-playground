@@ -5,4 +5,4 @@ resources:
   - bitnami.yaml
   - ingress-nginx.yaml
   - voteapp.yaml
-  - opc-publisher.yaml
+  # - opc-publisher.yaml
