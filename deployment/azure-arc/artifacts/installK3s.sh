@@ -29,7 +29,7 @@ sed -i '7s/^/export location=/' vars.sh
 sed -i '8s/^/export stagingStorageAccountName=/' vars.sh
 sed -i '9s/^/export logAnalyticsWorkspace=/' vars.sh
 sed -i '10s/^/export deployBastion=/' vars.sh
-
+sed -i '11s/^/export publicIp=/' vars.sh
 chmod +x vars.sh
 . ./vars.sh
 
@@ -41,12 +41,11 @@ sudo -u $adminUsername mkdir -p /home/${adminUsername}/jumpstart_logs
 while sleep 1; do sudo -s rsync -a /var/lib/waagent/custom-script/download/0/installK3s.log /home/${adminUsername}/jumpstart_logs/installK3s.log; done &
 
 # Installing Rancher K3s single master cluster using k3sup
-# publicIp=$(hostname -i)
 sudo -u $adminUsername mkdir /home/${adminUsername}/.kube
 curl -sLS https://get.k3sup.dev | sh
 # sudo cp k3sup /usr/local/bin/k3sup
-# sudo k3sup install --local --user $adminUsername --context $vmName --ip $publicIp --k3s-extra-args '--no-deploy traefik'
-sudo k3sup install --local --context $vmName --k3s-extra-args '--no-deploy traefik'
+sudo k3sup install --local --user $adminUsername --context $vmName --ip $publicIp --k3s-extra-args '--disable traefik'
+# sudo k3sup install --local --context $vmName --k3s-extra-args '--no-deploy traefik'
 sudo chmod 644 /etc/rancher/k3s/k3s.yaml
 sudo cp kubeconfig /home/${adminUsername}/.kube/config
 sudo cp kubeconfig /home/${adminUsername}/.kube/config.staging
