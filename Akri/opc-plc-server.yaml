@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: opcplc
+  labels:
+    app: opcplc
+spec:
+  selector:
+    matchLabels:
+      app: opcplc
+  template:
+    metadata:
+      labels: 
+        app: opcplc
+        name: opc-plc-server
+    spec:
+      hostNetwork: true
+      containers:
+      - name: opcplc1
+        image: mcr.microsoft.com/iotedge/opc-plc:latest
+        ports:
+        - containerPort: 50000
+        args: ["--portnum=50000", "--autoaccept", "--fastnodes=1", "--fasttype=uint", "--fasttypelowerbound=65", "--fasttypeupperbound=85", "--fasttyperandomization=True", "--showpnjsonph", "--unsecuretransport"]
+      - name: opcplc2
+        image: mcr.microsoft.com/iotedge/opc-plc:latest
+        ports:
+        - containerPort: 50001
+        args: ["--portnum=50001", "--autoaccept", "--fastnodes=1", "--fasttype=uint", "--fasttypelowerbound=65", "--fasttypeupperbound=85", "--fasttyperandomization=True", "--showpnjsonph", "--unsecuretransport"]
